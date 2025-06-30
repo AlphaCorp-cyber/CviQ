@@ -298,7 +298,13 @@ SESSION_SECRET={os.environ.get('SESSION_SECRET', 'dev-secret-key')}
             os.environ['TWILIO_AUTH_TOKEN'] = auth_token
             os.environ['TWILIO_PHONE_NUMBER'] = phone_number
             
-            flash('Twilio configuration saved successfully! Please restart the application for changes to take effect.', 'success')
+            # Update Flask app config
+            from flask import current_app
+            current_app.config['TWILIO_ACCOUNT_SID'] = account_sid
+            current_app.config['TWILIO_AUTH_TOKEN'] = auth_token
+            current_app.config['TWILIO_PHONE_NUMBER'] = phone_number
+            
+            flash('Twilio configuration saved successfully!', 'success')
         except Exception as e:
             flash(f'Error saving configuration: {str(e)}', 'error')
         

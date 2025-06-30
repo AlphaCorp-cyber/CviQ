@@ -121,7 +121,8 @@
                 <h6 class="m-0 fw-bold">Connection Status</h6>
             </div>
             <div class="card-body">
-                {% if config.TWILIO_ACCOUNT_SID and config.TWILIO_AUTH_TOKEN and config.TWILIO_PHONE_NUMBER %}
+                {% set twilio_configured = (config.TWILIO_ACCOUNT_SID or config.get('TWILIO_ACCOUNT_SID')) and (config.TWILIO_AUTH_TOKEN or config.get('TWILIO_AUTH_TOKEN')) and (config.TWILIO_PHONE_NUMBER or config.get('TWILIO_PHONE_NUMBER')) %}
+                {% if twilio_configured %}
                 <div class="d-flex align-items-center text-success mb-2">
                     <i class="fas fa-check-circle me-2"></i>
                     <span>All credentials configured</span>

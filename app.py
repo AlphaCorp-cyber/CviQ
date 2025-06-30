@@ -3,6 +3,12 @@ import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -58,10 +64,10 @@ os.makedirs(app.config['CV_FOLDER'], exist_ok=True)
 with app.app_context():
     # Import models to ensure tables are created
     import models  # noqa: F401
-    
+
     # Create all tables
     db.create_all()
-    
+
     # Initialize default templates
     from models import Template
     if not Template.query.first():
@@ -127,10 +133,10 @@ with app.app_context():
                 template_file="template10.py"
             )
         ]
-        
+
         for template in default_templates:
             db.session.add(template)
-        
+
         db.session.commit()
         logging.info("Default templates initialized")
 
