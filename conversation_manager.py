@@ -18,6 +18,7 @@ class ConversationManager:
             'collect_education': self.handle_collect_education,
             'collect_skills': self.handle_collect_skills,
             'select_template': self.handle_select_template,
+            'select_color': self.handle_select_color,
             'profile_photo': self.handle_profile_photo,
             'premium_upgrade': self.handle_premium_upgrade,
             'payment': self.handle_payment
@@ -322,6 +323,17 @@ Type '1' and send photo, or '2' to skip."""
                 selected_template = templates[template_choice - 1]
                 cv_data['template_id'] = selected_template.id
                 
+                # Check if this is a premium template and ask for color selection
+                if selected_template.is_premium and selected_template.template_file in ['template3.py', 'template5.py', 'template6.py', 'template8.py', 'template9.py', 'template10.py']:
+                    conv_state.state = 'select_color'
+                    conv_state.data = json.dumps(cv_data)
+                    db.session.commit()
+                    
+                    return self.show_color_selection(selected_template)
+                
+                # For non-premium templates or basic templates, generate CV directly
+                cv_data['color_scheme'] = 'blue'  # default color
+                
                 # Generate CV
                 from pdf_generator import PDFGenerator
                 pdf_gen = PDFGenerator()
@@ -344,6 +356,7 @@ Type '1' and send photo, or '2' to skip."""
                     new_cv.profile_photo = cv_data.get('profile_photo')
                     new_cv.file_path = cv_file_path
                     new_cv.is_premium = selected_template.is_premium
+                    new_cv.color_scheme = cv_data.get('color_scheme', 'blue')
                     
                     db.session.add(new_cv)
                     db.session.commit()
@@ -575,6 +588,98 @@ Type '1' and send photo, or '2' to skip."""
         msg += self.get_main_menu()
         
         return msg
+    
+    def show_color_selection(self, template):
+        """Show color selection for premium templates"""
+        msg = f"🎨 Choose a color scheme for {template.name}:\n\n"
+        msg += "1. 💙 Blue - Professional and trustworthy\n"
+        msg += "2. 💚 Green - Fresh and natural\n"
+        msg += "3. ❤️ Red - Bold and energetic\n"
+        msg += "4. 💜 Purple - Creative and innovative\n"
+        msg += "5. 🧡 Orange - Warm and friendly\n"
+        msg += "6. 🖤 Navy - Classic and sophisticated\n\n"
+        msg += "Reply with the number of your preferred color scheme:"
+        return msg
+    
+    def handle_select_color(self, user, conv_state, message, media_url=None):
+        """Handle color scheme selection"""
+        cv_data = json.loads(conv_state.data)
+        
+        color_map = {
+            '1': 'blue',
+            '2': 'green', 
+            '3': 'red',
+            '4': 'purple',
+            '5': 'orange',
+            '6': 'navy'
+        }
+        
+        color_choice = message.strip()
+        if color_choice in color_map:
+            cv_data['color_scheme'] = color_map[color_choice]
+            
+            # Get the selected template
+            template = Template.query.get(cv_data['template_id'])
+            
+            # Generate CV with selected color
+            from pdf_generator import PDFGenerator
+            pdf_gen = PDFGenerator()
+            
+            cv_file_path = pdf_gen.generate_cv(user, cv_data, template)
+            
+            if cv_file_path:
+                # Save CV to database
+                new_cv = CV()
+                new_cv.user_id = user.id
+                new_cv.template_id = template.id
+                new_cv.full_name = cv_data['full_name']
+                new_cv.email = cv_data['email']
+                new_cv.phone = cv_data['phone']
+                new_cv.address = cv_data['address']
+                new_cv.summary = cv_data['summary']
+                new_cv.experience = json.dumps(cv_data['experience'])
+                new_cv.education = json.dumps(cv_data['education'])
+                new_cv.skills = json.dumps(cv_data['skills'])
+                new_cv.profile_photo = cv_data.get('profile_photo')
+                new_cv.file_path = cv_file_path
+                new_cv.is_premium = template.is_premium
+                new_cv.color_scheme = cv_data['color_scheme']
+                
+                db.session.add(new_cv)
+                db.session.commit()
+                
+                # Reset conversation
+                conv_state.state = 'idle'
+                conv_state.data = ''
+                db.session.commit()
+                
+                # Send CV file via WhatsApp
+                from twilio.rest import Client
+                import os
+                
+                client = Client(os.environ.get('TWILIO_ACCOUNT_SID'), os.environ.get('TWILIO_AUTH_TOKEN'))
+                
+                try:
+                    # Upload file and send
+                    with open(cv_file_path, 'rb') as file:
+                        message = client.messages.create(
+                            body=f"🎉 Your premium CV is ready!\n\nTemplate: {template.name}\nColor: {color_map[color_choice].title()}\n\n{self.get_main_menu()}",
+                            from_=os.environ.get('TWILIO_PHONE_NUMBER'),
+                            to=user.phone_number,
+                            media_url=f"data:application/pdf;base64,{file.read()}"
+                        )
+                    
+                    return f"🎉 Perfect! Your CV has been generated with {color_map[color_choice]} colors and sent to you!\n\n{self.get_main_menu()}"
+                    
+                except Exception as e:
+                    logging.error(f"Error sending CV file: {str(e)}")
+                    return f"✅ Your CV has been generated successfully!\n\nTemplate: {template.name}\nColor: {color_map[color_choice].title()}\n\n{self.get_main_menu()}"
+            
+            else:
+                return "❌ Sorry, there was an error generating your CV. Please try again.\n\n" + self.get_main_menu()
+        
+        else:
+            return "Please select a valid color option (1-6):\n\n" + self.show_color_selection(Template.query.get(cv_data['template_id']))
     
     def get_main_menu(self):
         """Get the main menu options"""

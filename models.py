@@ -82,6 +82,9 @@ class CV(db.Model):
     skills = Column(Text)      # JSON string
     profile_photo = Column(String(255))  # File path
     
+    # Premium features
+    color_scheme = Column(String(20), default='blue')  # blue, green, red, purple, orange, navy
+    
     # File info
     file_path = Column(String(255))
     file_size = Column(Integer)

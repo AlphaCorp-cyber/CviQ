@@ -1,13 +1,14 @@
 
 """
-Premium Executive CV Template
-Sophisticated and elegant design for executive professionals
+Creative Modern CV Template
+Colorful and modern design for creative professionals
 """
 
 import json
 import logging
+import os
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether, HRFlowable
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether, HRFlowable, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch, mm, cm
 from reportlab.lib import colors
@@ -16,30 +17,69 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 class TemplateGenerator:
     def __init__(self):
         self.styles = getSampleStyleSheet()
-        self.setup_custom_styles()
+        self.color_schemes = {
+            'blue': {
+                'primary': colors.HexColor('#2E7D99'),
+                'secondary': colors.HexColor('#1E5A70'),
+                'accent': colors.HexColor('#4A9FBF'),
+                'light': colors.HexColor('#E8F4F8')
+            },
+            'green': {
+                'primary': colors.HexColor('#27AE60'),
+                'secondary': colors.HexColor('#1E8449'),
+                'accent': colors.HexColor('#58D68D'),
+                'light': colors.HexColor('#E8F8F5')
+            },
+            'red': {
+                'primary': colors.HexColor('#E74C3C'),
+                'secondary': colors.HexColor('#C0392B'),
+                'accent': colors.HexColor('#F1948A'),
+                'light': colors.HexColor('#FDEDEC')
+            },
+            'purple': {
+                'primary': colors.HexColor('#8E44AD'),
+                'secondary': colors.HexColor('#7D3C98'),
+                'accent': colors.HexColor('#BB8FCE'),
+                'light': colors.HexColor('#F4ECF7')
+            },
+            'orange': {
+                'primary': colors.HexColor('#E67E22'),
+                'secondary': colors.HexColor('#D35400'),
+                'accent': colors.HexColor('#F39C12'),
+                'light': colors.HexColor('#FEF9E7')
+            },
+            'navy': {
+                'primary': colors.HexColor('#34495E'),
+                'secondary': colors.HexColor('#2C3E50'),
+                'accent': colors.HexColor('#5D6D7E'),
+                'light': colors.HexColor('#EBF5FB')
+            }
+        }
         
-    def setup_custom_styles(self):
-        """Setup premium paragraph styles for this template"""
-        # Premium header name style - elegant and sophisticated
+    def setup_custom_styles(self, color_scheme='blue'):
+        """Setup colorful paragraph styles for this template"""
+        colors_set = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
+        
+        # Creative header name style with dynamic colors
         self.styles.add(ParagraphStyle(
             name='HeaderName',
             parent=self.styles['Title'],
             fontSize=28,
             spaceAfter=4,
             alignment=TA_LEFT,
-            textColor=colors.HexColor('#1A237E'),
+            textColor=colors_set['primary'],
             fontName='Helvetica-Bold',
             leftIndent=30*mm
         ))
         
-        # Professional title style
+        # Professional title style with dynamic color
         self.styles.add(ParagraphStyle(
             name='ProfessionalTitle',
             parent=self.styles['Normal'],
             fontSize=14,
             spaceAfter=8,
             alignment=TA_LEFT,
-            textColor=colors.HexColor('#3949AB'),
+            textColor=colors_set['secondary'],
             fontName='Helvetica-Oblique',
             leftIndent=30*mm
         ))
@@ -136,8 +176,12 @@ class TemplateGenerator:
         ))
     
     def generate(self, cv_data, filepath):
-        """Generate premium executive CV PDF"""
+        """Generate creative modern CV PDF with color scheme and image support"""
         try:
+            # Get color scheme from cv_data or use default
+            color_scheme = cv_data.get('color_scheme', 'blue')
+            self.setup_custom_styles(color_scheme)
+            
             doc = SimpleDocTemplate(
                 filepath,
                 pagesize=A4,
@@ -149,15 +193,15 @@ class TemplateGenerator:
             
             story = []
             
-            # Add premium header with sidebar design
-            story.extend(self._create_premium_header(cv_data))
+            # Add creative header with photo support
+            story.extend(self._create_header(cv_data))
             
-            # Add elegant divider
-            story.append(self._create_elegant_divider())
+            # Add colorful divider
+            story.append(self._create_colorful_divider(color_scheme))
             
-            # Executive summary
+            # Professional summary
             if cv_data.get('summary'):
-                story.extend(self._create_executive_summary(cv_data['summary']))
+                story.extend(self._create_summary_section(cv_data['summary']))
             
             # Professional experience
             if cv_data.get('experience'):
@@ -180,37 +224,78 @@ class TemplateGenerator:
             logging.error(f"Error generating Premium Template3 CV: {str(e)}")
             return False
     
-    def _create_premium_header(self, cv_data):
-        """Create sophisticated header with sidebar accent"""
+    def _create_header(self, cv_data):
+        """Create creative header with photo support and dynamic colors"""
         elements = []
+        color_scheme = cv_data.get('color_scheme', 'blue')
+        colors_set = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
         
-        # Name
-        name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
-        elements.append(name)
+        # Create table for header layout with photo
+        header_data = []
         
-        # Professional title
-        title = Paragraph("EXECUTIVE PROFESSIONAL", self.styles['ProfessionalTitle'])
-        elements.append(title)
+        # Check if profile photo exists
+        profile_photo_path = cv_data.get('profile_photo')
+        if profile_photo_path and os.path.exists(profile_photo_path):
+            try:
+                # Create photo cell
+                img = Image(profile_photo_path, width=60*mm, height=60*mm)
+                photo_cell = img
+            except:
+                photo_cell = Paragraph("", self.styles['Normal'])
+        else:
+            photo_cell = Paragraph("", self.styles['Normal'])
+        
+        # Create info cell
+        info_parts = []
+        info_parts.append(Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName']))
+        info_parts.append(Paragraph("CREATIVE PROFESSIONAL", self.styles['ProfessionalTitle']))
         
         # Contact information
         contact_parts = []
         if cv_data.get('email'):
-            contact_parts.append(f"Email: {cv_data['email']}")
+            contact_parts.append(f"✉ {cv_data['email']}")
         if cv_data.get('phone'):
-            contact_parts.append(f"Phone: {cv_data['phone']}")
+            contact_parts.append(f"📱 {cv_data['phone']}")
         if cv_data.get('address'):
-            contact_parts.append(f"Address: {cv_data['address']}")
+            contact_parts.append(f"📍 {cv_data['address']}")
         
         if contact_parts:
             contact_text = " | ".join(contact_parts)
-            contact = Paragraph(contact_text, self.styles['ContactInfo'])
-            elements.append(contact)
+            info_parts.append(Paragraph(contact_text, self.styles['ContactInfo']))
         
-        # Add elegant divider
-        elements.append(HRFlowable(width="100%", thickness=3, lineCap='round', 
-                                 color=colors.HexColor('#1A237E'), spaceBefore=10, spaceAfter=20))
+        # Build info cell content
+        info_cell = []
+        for part in info_parts:
+            info_cell.append(part)
+            info_cell.append(Spacer(1, 3))
+        
+        # Create header table
+        if profile_photo_path and os.path.exists(profile_photo_path):
+            header_data = [[photo_cell, info_cell]]
+            col_widths = [70*mm, 120*mm]
+        else:
+            header_data = [[info_cell]]
+            col_widths = [190*mm]
+        
+        header_table = Table(header_data, colWidths=col_widths)
+        header_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+            ('TOPPADDING', (0, 0), (-1, -1), 0),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10)
+        ]))
+        
+        elements.append(header_table)
         
         return elements
+    
+    def _create_colorful_divider(self, color_scheme='blue'):
+        """Create a colorful section divider"""
+        colors_set = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
+        return HRFlowable(width="100%", thickness=3, lineCap='round', 
+                         color=colors_set['primary'], spaceBefore=10, spaceAfter=20)
     
     def _create_elegant_divider(self):
         """Create an elegant section divider"""

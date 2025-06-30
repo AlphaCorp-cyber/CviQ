@@ -6,8 +6,9 @@ Designed for IT and technical professionals
 
 import json
 import logging
+import os
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch, mm, cm
 from reportlab.lib import colors
@@ -16,10 +17,48 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 class TemplateGenerator:
     def __init__(self):
         self.styles = getSampleStyleSheet()
-        self.setup_custom_styles()
+        self.color_schemes = {
+            'blue': {
+                'primary': colors.HexColor('#2E86C1'),
+                'secondary': colors.HexColor('#1F618D'),
+                'accent': colors.HexColor('#5DADE2'),
+                'background': colors.HexColor('#EBF5FB')
+            },
+            'green': {
+                'primary': colors.HexColor('#28B463'),
+                'secondary': colors.HexColor('#1E8449'),
+                'accent': colors.HexColor('#58D68D'),
+                'background': colors.HexColor('#E8F8F5')
+            },
+            'red': {
+                'primary': colors.HexColor('#E74C3C'),
+                'secondary': colors.HexColor('#C0392B'),
+                'accent': colors.HexColor('#F1948A'),
+                'background': colors.HexColor('#FDEDEC')
+            },
+            'purple': {
+                'primary': colors.HexColor('#8E44AD'),
+                'secondary': colors.HexColor('#7D3C98'),
+                'accent': colors.HexColor('#BB8FCE'),
+                'background': colors.HexColor('#F4ECF7')
+            },
+            'orange': {
+                'primary': colors.HexColor('#E67E22'),
+                'secondary': colors.HexColor('#D35400'),
+                'accent': colors.HexColor('#F39C12'),
+                'background': colors.HexColor('#FEF9E7')
+            },
+            'navy': {
+                'primary': colors.HexColor('#34495E'),
+                'secondary': colors.HexColor('#2C3E50'),
+                'accent': colors.HexColor('#5D6D7E'),
+                'background': colors.HexColor('#EBF5FB')
+            }
+        }
         
-    def setup_custom_styles(self):
-        """Setup technical-focused styles"""
+    def setup_custom_styles(self, color_scheme='blue'):
+        """Setup technical-focused styles with dynamic colors"""
+        colors_set = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
         # Tech-style header
         self.styles.add(ParagraphStyle(
             name='HeaderName',
