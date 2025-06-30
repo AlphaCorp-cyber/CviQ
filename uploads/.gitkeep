@@ -1,0 +1,3 @@
+# This file ensures that the uploads directory is tracked by Git
+# The uploads directory is used to store temporary files like profile photos
+# uploaded by users via WhatsApp before they are processed and saved to CVs

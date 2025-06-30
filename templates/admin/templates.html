@@ -1,0 +1,120 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Templates - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-file-code me-2"></i>
+                Template Management
+            </h1>
+            <a href="{{ url_for('admin.add_template') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Template
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="m-0 fw-bold">CV Templates</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="templatesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Template File</th>
+                        <th>Usage Count</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for template in templates %}
+                    <tr>
+                        <td>{{ template.id }}</td>
+                        <td>
+                            <strong>{{ template.name }}</strong>
+                        </td>
+                        <td>{{ template.description or '-' }}</td>
+                        <td>
+                            {% if template.is_premium %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-crown me-1"></i>Premium
+                                </span>
+                            {% else %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-unlock me-1"></i>Free
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if template.is_active %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Active
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times me-1"></i>Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <code>{{ template.template_file }}</code>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ template.cvs|length }}</span>
+                        </td>
+                        <td>{{ template.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('admin.toggle_template', template_id=template.id) }}" 
+                                   class="btn btn-outline-{% if template.is_active %}warning{% else %}success{% endif %}"
+                                   title="{% if template.is_active %}Deactivate{% else %}Activate{% endif %}">
+                                    <i class="fas fa-{% if template.is_active %}pause{% else %}play{% endif %}"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if not templates %}
+        <div class="text-center py-4">
+            <div class="mb-3">
+                <i class="fas fa-file-code fa-3x text-muted"></i>
+            </div>
+            <h5 class="text-muted">No Templates Found</h5>
+            <p class="text-muted">Get started by adding your first CV template.</p>
+            <a href="{{ url_for('admin.add_template') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Template
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#templatesTable').DataTable({
+        "pageLength": 25,
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "orderable": false, "targets": [8] }
+        ]
+    });
+});
+</script>
+{% endblock %}

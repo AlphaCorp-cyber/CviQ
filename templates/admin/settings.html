@@ -1,0 +1,159 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Settings - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-cog me-2"></i>
+                System Settings
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <i class="fas fa-comment-dots fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Twilio Configuration</h5>
+                        <p class="card-text text-muted small">WhatsApp messaging settings</p>
+                    </div>
+                </div>
+                <p class="card-text">Configure your Twilio API credentials for WhatsApp messaging integration.</p>
+                <a href="{{ url_for('admin.twilio_settings') }}" class="btn btn-primary">
+                    <i class="fas fa-cog me-1"></i>Configure Twilio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <i class="fas fa-credit-card fa-2x text-success"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Payment Settings</h5>
+                        <p class="card-text text-muted small">EcoCash and pricing configuration</p>
+                    </div>
+                </div>
+                <p class="card-text">Configure payment methods and pricing for premium features.</p>
+                <button class="btn btn-success" disabled>
+                    <i class="fas fa-cog me-1"></i>Configure Payments
+                </button>
+                <small class="d-block text-muted mt-2">Coming soon</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <i class="fas fa-database fa-2x text-info"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-1">Database Status</h5>
+                        <p class="card-text text-muted small">Database connection and health</p>
+                    </div>
+                </div>
+                <p class="card-text">Monitor database status and performance metrics.</p>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-success me-2">
+                        <i class="fas fa-check-circle me-1"></i>Connected
+                    </span>
+                    <small class="text-muted">PostgreSQL</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">System Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold mb-3">Application Status</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>WhatsApp Bot:</span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle me-1"></i>Running
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>PDF Generator:</span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle me-1"></i>Active
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Database:</span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle me-1"></i>Connected
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>File Storage:</span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle me-1"></i>Available
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6 class="fw-bold mb-3">Environment Variables</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>DATABASE_URL:</span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Set
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>TWILIO_ACCOUNT_SID:</span>
+                            <span class="badge bg-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Missing
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>TWILIO_AUTH_TOKEN:</span>
+                            <span class="badge bg-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Missing
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>TWILIO_PHONE_NUMBER:</span>
+                            <span class="badge bg-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Missing
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> To fully activate the WhatsApp functionality, please configure your Twilio credentials 
+                    using the configuration panel above or by setting the appropriate environment variables.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

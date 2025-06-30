@@ -1,0 +1,304 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Dashboard - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h3 mb-4">
+            <i class="fas fa-chart-bar me-2"></i>
+            Dashboard Overview
+        </h1>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-primary">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                            Total Users
+                        </div>
+                        <div class="h5 mb-0 fw-bold">{{ total_users }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-success">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                            CVs Generated
+                        </div>
+                        <div class="h5 mb-0 fw-bold">{{ total_cvs }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-pdf fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-warning">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                            Premium Users
+                        </div>
+                        <div class="h5 mb-0 fw-bold">{{ premium_users }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-crown fa-2x text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-info">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                            Revenue (USD)
+                        </div>
+                        <div class="h5 mb-0 fw-bold">${{ "%.2f"|format(total_revenue) }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold">User Registrations & CV Creation (Last 30 Days)</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="userActivityChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5">
+        <div class="card">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold">Template Usage</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="templateChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold">Recent CVs Generated</h6>
+            </div>
+            <div class="card-body">
+                {% if recent_cvs %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Template</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cv in recent_cvs %}
+                                <tr>
+                                    <td>{{ cv.full_name }}</td>
+                                    <td>{{ cv.template.name if cv.template else 'N/A' }}</td>
+                                    <td>{{ cv.created_at.strftime('%m/%d/%Y') }}</td>
+                                    <td>
+                                        {% if cv.is_premium %}
+                                            <span class="badge bg-warning">Premium</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Free</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No CVs generated yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold">Quick Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 fw-bold text-primary">{{ recent_registrations }}</div>
+                            <div class="text-xs text-uppercase">New Users (7 days)</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 fw-bold text-success">
+                                {{ "%.1f"|format((premium_users / total_users * 100) if total_users > 0 else 0) }}%
+                            </div>
+                            <div class="text-xs text-uppercase">Premium Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h6 class="fw-bold mb-3">System Status</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-2">
+                                <i class="fas fa-circle text-success"></i>
+                            </div>
+                            <div class="text-sm">WhatsApp Bot</div>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-2">
+                                <i class="fas fa-circle text-success"></i>
+                            </div>
+                            <div class="text-sm">PDF Generator</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-2">
+                                <i class="fas fa-circle text-success"></i>
+                            </div>
+                            <div class="text-sm">Database</div>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-2">
+                                <i class="fas fa-circle text-success"></i>
+                            </div>
+                            <div class="text-sm">File Storage</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load dashboard charts
+document.addEventListener('DOMContentLoaded', function() {
+    // User Activity Chart
+    fetch('/admin/api/stats')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('userActivityChart').getContext('2d');
+            
+            // Prepare data for chart
+            const dates = [...new Set([
+                ...data.daily_registrations.map(d => d.date),
+                ...data.daily_cvs.map(d => d.date)
+            ])].sort();
+            
+            const registrationData = dates.map(date => {
+                const record = data.daily_registrations.find(d => d.date === date);
+                return record ? record.count : 0;
+            });
+            
+            const cvData = dates.map(date => {
+                const record = data.daily_cvs.find(d => d.date === date);
+                return record ? record.count : 0;
+            });
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'New Users',
+                        data: registrationData,
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.1
+                    }, {
+                        label: 'CVs Created',
+                        data: cvData,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    
+    // Template Usage Chart
+    const templateData = {{ template_stats | tojsonfilter | safe }};
+    if (templateData.length > 0) {
+        const ctx2 = document.getElementById('templateChart').getContext('2d');
+        
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: templateData.map(t => t[0]),
+                datasets: [{
+                    data: templateData.map(t => t[1]),
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

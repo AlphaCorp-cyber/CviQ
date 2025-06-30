@@ -1,0 +1,165 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Add Template - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-plus me-2"></i>
+                Add New Template
+            </h1>
+            <a href="{{ url_for('admin.templates') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Templates
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Template Information</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-tag me-1"></i>
+                            Template Name *
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" required
+                               placeholder="e.g., Creative Designer">
+                        <div class="form-text">
+                            Display name for the template that users will see.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>
+                            Description
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Brief description of the template style and target audience"></textarea>
+                        <div class="form-text">
+                            Describe the template style and who it's best suited for.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="template_file" class="form-label">
+                            <i class="fas fa-file-code me-1"></i>
+                            Template File *
+                        </label>
+                        <select class="form-select" id="template_file" name="template_file" required>
+                            <option value="">Select template implementation...</option>
+                            <option value="template1.py">template1.py (Modern Professional)</option>
+                            <option value="template2.py">template2.py (Executive Classic)</option>
+                        </select>
+                        <div class="form-text">
+                            The Python file that contains the template generation logic.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_premium" name="is_premium">
+                            <label class="form-check-label" for="is_premium">
+                                <i class="fas fa-crown me-1 text-warning"></i>
+                                Premium Template
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            Premium templates are only available to users who have upgraded their accounts.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                            <label class="form-check-label" for="is_active">
+                                <i class="fas fa-eye me-1 text-success"></i>
+                                Active Template
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            Only active templates are shown to users. Uncheck to hide this template.
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.templates') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Save Template
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Template Development</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">Creating New Templates</h6>
+                <p class="small">To create a new template design, you need to:</p>
+                
+                <ol class="small">
+                    <li>Create a new Python file in the <code>cv_templates/</code> directory</li>
+                    <li>Implement a <code>TemplateGenerator</code> class with a <code>generate()</code> method</li>
+                    <li>Use ReportLab to define the PDF layout and styling</li>
+                    <li>Test the template with sample data</li>
+                    <li>Add it to this form's template file dropdown</li>
+                </ol>
+
+                <p class="small">
+                    <strong>Note:</strong> Template files must follow the established pattern and implement the required interface.
+                </p>
+
+                <hr>
+
+                <h6 class="fw-bold">Available Templates</h6>
+                <div class="small">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-file-code me-2 text-primary"></i>
+                        <span>template1.py - Modern Professional</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-code me-2 text-primary"></i>
+                        <span>template2.py - Executive Classic</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Template Pricing</h6>
+            </div>
+            <div class="card-body">
+                <p class="small">
+                    <strong>Free Templates:</strong> Available to all users without payment.
+                </p>
+                <p class="small">
+                    <strong>Premium Templates:</strong> Require users to upgrade to a premium account ($3-5 USD).
+                </p>
+                
+                <div class="alert alert-info small">
+                    <i class="fas fa-lightbulb me-1"></i>
+                    Consider the target audience when deciding if a template should be premium or free.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

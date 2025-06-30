@@ -1,0 +1,152 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Twilio Settings - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-comment-dots me-2"></i>
+                Twilio Configuration
+            </h1>
+            <a href="{{ url_for('admin.settings') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Settings
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">WhatsApp API Configuration</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Instructions:</strong> To enable WhatsApp messaging, you need to set up environment variables in your hosting platform. 
+                    In Replit, go to the "Secrets" tab in the sidebar and add these three keys.
+                </div>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="account_sid" class="form-label">
+                            <i class="fas fa-user-circle me-1"></i>
+                            Twilio Account SID
+                        </label>
+                        <input type="text" class="form-control" id="account_sid" name="account_sid" 
+                               placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                               value="{{ config.TWILIO_ACCOUNT_SID or '' }}" readonly>
+                        <div class="form-text">
+                            Your unique Twilio account identifier. Found in your Twilio Console dashboard.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="auth_token" class="form-label">
+                            <i class="fas fa-key me-1"></i>
+                            Twilio Auth Token
+                        </label>
+                        <input type="password" class="form-control" id="auth_token" name="auth_token" 
+                               placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                               value="{{ '••••••••••••••••' if config.TWILIO_AUTH_TOKEN else '' }}" readonly>
+                        <div class="form-text">
+                            Your secret authentication token. Keep this secure and never share it publicly.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">
+                            <i class="fas fa-phone me-1"></i>
+                            WhatsApp Business Number
+                        </label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" 
+                               placeholder="whatsapp:+1234567890"
+                               value="{{ config.TWILIO_PHONE_NUMBER or '' }}" readonly>
+                        <div class="form-text">
+                            Your Twilio WhatsApp-enabled phone number (includes "whatsapp:" prefix).
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Note:</strong> This form is read-only. To update these settings, add them as environment variables:
+                        <ul class="mb-0 mt-2">
+                            <li><code>TWILIO_ACCOUNT_SID</code></li>
+                            <li><code>TWILIO_AUTH_TOKEN</code></li>
+                            <li><code>TWILIO_PHONE_NUMBER</code></li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" disabled>
+                        <i class="fas fa-save me-1"></i>Save Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Setup Guide</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">1. Create Twilio Account</h6>
+                <p class="small">Sign up at <a href="https://twilio.com" target="_blank">twilio.com</a> and verify your account.</p>
+
+                <h6 class="fw-bold">2. Enable WhatsApp</h6>
+                <p class="small">In your Twilio Console, navigate to Messaging > Try it out > Send a WhatsApp message.</p>
+
+                <h6 class="fw-bold">3. Get Credentials</h6>
+                <p class="small">Find your Account SID and Auth Token in the Twilio Console dashboard.</p>
+
+                <h6 class="fw-bold">4. Get Phone Number</h6>
+                <p class="small">Use the WhatsApp Sandbox number or purchase a dedicated WhatsApp Business number.</p>
+
+                <h6 class="fw-bold">5. Configure Webhook</h6>
+                <p class="small">Set your webhook URL to:<br>
+                <code class="small">https://your-app.replit.app/webhook</code></p>
+
+                <hr>
+
+                <div class="text-center">
+                    <a href="https://www.twilio.com/docs/whatsapp" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="fas fa-external-link-alt me-1"></i>
+                        Twilio Docs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Connection Status</h6>
+            </div>
+            <div class="card-body">
+                {% if config.TWILIO_ACCOUNT_SID and config.TWILIO_AUTH_TOKEN and config.TWILIO_PHONE_NUMBER %}
+                <div class="d-flex align-items-center text-success mb-2">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span>All credentials configured</span>
+                </div>
+                <div class="d-flex align-items-center text-success">
+                    <i class="fas fa-wifi me-2"></i>
+                    <span>Ready to receive messages</span>
+                </div>
+                {% else %}
+                <div class="d-flex align-items-center text-warning mb-2">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span>Missing credentials</span>
+                </div>
+                <div class="d-flex align-items-center text-muted">
+                    <i class="fas fa-times-circle me-2"></i>
+                    <span>WhatsApp disabled</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Transactions - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-credit-card me-2"></i>
+                Transaction Management
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="m-0 fw-bold">All Transactions</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                        <th>Reference</th>
+                        <th>Created</th>
+                        <th>Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions.items %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.user_detail', user_id=transaction.user.id) }}" 
+                               class="text-decoration-none">
+                                {{ transaction.user.phone_number }}
+                            </a>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{ transaction.description or transaction.product_type }}</strong>
+                            </div>
+                            <small class="text-muted">{{ transaction.product_type }}</small>
+                        </td>
+                        <td>
+                            <span class="fw-bold">${{ transaction.amount }}</span>
+                            <small class="text-muted">{{ transaction.currency }}</small>
+                        </td>
+                        <td>{{ transaction.payment_method or 'Not specified' }}</td>
+                        <td>
+                            {% if transaction.status == 'completed' %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Completed
+                                </span>
+                            {% elif transaction.status == 'pending' %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-clock me-1"></i>Pending
+                                </span>
+                            {% elif transaction.status == 'failed' %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times me-1"></i>Failed
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ transaction.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if transaction.transaction_ref %}
+                                <code class="small">{{ transaction.transaction_ref }}</code>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if transaction.completed_at %}
+                                {{ transaction.completed_at.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if transactions.pages > 1 %}
+        <nav aria-label="Transactions pagination">
+            <ul class="pagination justify-content-center">
+                {% if transactions.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('admin.transactions', page=transactions.prev_num) }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                {% for page_num in transactions.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != transactions.page %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.transactions', page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if transactions.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('admin.transactions', page=transactions.next_num) }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% if not transactions.items %}
+        <div class="text-center py-4">
+            <div class="mb-3">
+                <i class="fas fa-credit-card fa-3x text-muted"></i>
+            </div>
+            <h5 class="text-muted">No Transactions Yet</h5>
+            <p class="text-muted">Premium purchases and transactions will appear here as users make payments.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card border-success">
+            <div class="card-body text-center">
+                <h4 class="text-success">
+                    ${{ transactions.items|selectattr('status', 'equalto', 'completed')|map(attribute='amount')|sum|round(2) }}
+                </h4>
+                <p class="text-muted mb-0">Total Revenue</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-warning">
+            <div class="card-body text-center">
+                <h4 class="text-warning">
+                    {{ transactions.items|selectattr('status', 'equalto', 'pending')|list|length }}
+                </h4>
+                <p class="text-muted mb-0">Pending</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-primary">
+            <div class="card-body text-center">
+                <h4 class="text-primary">
+                    {{ transactions.items|selectattr('status', 'equalto', 'completed')|list|length }}
+                </h4>
+                <p class="text-muted mb-0">Completed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-danger">
+            <div class="card-body text-center">
+                <h4 class="text-danger">
+                    {{ transactions.items|selectattr('status', 'equalto', 'failed')|list|length }}
+                </h4>
+                <p class="text-muted mb-0">Failed</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#transactionsTable').DataTable({
+        "pageLength": 25,
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "orderable": false, "targets": [] }
+        ]
+    });
+});
+</script>
+{% endblock %}

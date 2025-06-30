@@ -1,0 +1,161 @@
+/* Custom Admin Styles */
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border: 1px solid var(--bs-border-color);
+}
+
+.card-header {
+    background-color: var(--bs-secondary-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group-sm > .btn {
+    font-size: 0.75rem;
+}
+
+/* Chart containers */
+canvas {
+    max-height: 300px;
+}
+
+/* Custom badge colors for dark theme */
+.badge.bg-warning {
+    color: var(--bs-dark) !important;
+}
+
+/* Status indicators */
+.text-success {
+    color: var(--bs-success) !important;
+}
+
+.text-warning {
+    color: var(--bs-warning) !important;
+}
+
+.text-danger {
+    color: var(--bs-danger) !important;
+}
+
+.text-info {
+    color: var(--bs-info) !important;
+}
+
+/* DataTables dark theme adjustments */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--bs-body-color);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--bs-body-color) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: white !important;
+}
+
+/* Form styles */
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Alert styles */
+.alert {
+    border: 1px solid transparent;
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: var(--bs-border-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn-group-sm > .btn {
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Custom utilities */
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+/* Icon spacing */
+.fas + span,
+.far + span {
+    margin-left: 0.25rem;
+}
+
+/* Card hover effects */
+.card:hover {
+    box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+/* Status dots */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.status-dot.online {
+    background-color: var(--bs-success);
+}
+
+.status-dot.offline {
+    background-color: var(--bs-danger);
+}
+
+.status-dot.warning {
+    background-color: var(--bs-warning);
+}

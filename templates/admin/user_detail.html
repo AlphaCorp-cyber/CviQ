@@ -1,0 +1,197 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}User Details - WhatsApp CV Maker Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="fas fa-user me-2"></i>
+                User Details
+            </h1>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Users
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">User Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-user-circle fa-4x text-muted"></i>
+                    <h5 class="mt-2">{{ user.name or 'Anonymous User' }}</h5>
+                    {% if user.is_premium %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-crown me-1"></i>Premium User
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">Free User</span>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <strong>Phone Number:</strong><br>
+                    <span class="text-muted">{{ user.phone_number }}</span>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Email:</strong><br>
+                    <span class="text-muted">{{ user.email or 'Not provided' }}</span>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Registration Date:</strong><br>
+                    <span class="text-muted">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Last Active:</strong><br>
+                    <span class="text-muted">{{ user.last_active.strftime('%Y-%m-%d %H:%M') if user.last_active else 'Never' }}</span>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Conversation State:</strong><br>
+                    <span class="badge bg-info">{{ user.conversation_state or 'idle' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-pdf fa-2x text-primary mb-2"></i>
+                        <h4 class="fw-bold">{{ user_cvs|length }}</h4>
+                        <p class="text-muted mb-0">CVs Created</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="fas fa-credit-card fa-2x text-success mb-2"></i>
+                        <h4 class="fw-bold">{{ user_transactions|length }}</h4>
+                        <p class="text-muted mb-0">Transactions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <i class="fas fa-crown fa-2x text-info mb-2"></i>
+                        <h4 class="fw-bold">
+                            ${{ user_transactions|selectattr('status', 'equalto', 'completed')|map(attribute='amount')|sum|round(2) }}
+                        </h4>
+                        <p class="text-muted mb-0">Total Spent</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">User's CVs ({{ user_cvs|length }})</h6>
+            </div>
+            <div class="card-body">
+                {% if user_cvs %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Template</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cv in user_cvs %}
+                                <tr>
+                                    <td>{{ cv.full_name }}</td>
+                                    <td>{{ cv.template.name if cv.template else 'Unknown' }}</td>
+                                    <td>
+                                        {% if cv.is_premium %}
+                                            <span class="badge bg-warning">Premium</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Free</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ cv.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No CVs Created</h6>
+                        <p class="text-muted">This user hasn't created any CVs yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold">Transaction History ({{ user_transactions|length }})</h6>
+            </div>
+            <div class="card-body">
+                {% if user_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in user_transactions %}
+                                <tr>
+                                    <td>{{ transaction.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ transaction.description or transaction.product_type }}</td>
+                                    <td>${{ transaction.amount }}</td>
+                                    <td>
+                                        {% if transaction.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif transaction.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ transaction.transaction_ref or '-' }}</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No Transactions</h6>
+                        <p class="text-muted">This user hasn't made any purchases yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
