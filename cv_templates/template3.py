@@ -184,52 +184,31 @@ class TemplateGenerator:
         """Create sophisticated header with sidebar accent"""
         elements = []
         
-        # Create header table for professional layout
-        header_data = []
+        # Name
+        name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
+        elements.append(name)
         
-        # Left side with accent color bar
-        left_content = f"""
-        <para fontSize="28" fontName="Helvetica-Bold" textColor="#1A237E">
-        {cv_data.get('full_name', '')}
-        </para>
-        <para fontSize="14" fontName="Helvetica-Oblique" textColor="#3949AB" spaceAfter="8">
-        EXECUTIVE PROFESSIONAL
-        </para>
-        """
+        # Professional title
+        title = Paragraph("EXECUTIVE PROFESSIONAL", self.styles['ProfessionalTitle'])
+        elements.append(title)
         
-        # Contact information formatted elegantly
+        # Contact information
         contact_parts = []
         if cv_data.get('email'):
-            contact_parts.append(f"✉ {cv_data['email']}")
+            contact_parts.append(f"Email: {cv_data['email']}")
         if cv_data.get('phone'):
-            contact_parts.append(f"☎ {cv_data['phone']}")
+            contact_parts.append(f"Phone: {cv_data['phone']}")
         if cv_data.get('address'):
-            contact_parts.append(f"⌂ {cv_data['address']}")
+            contact_parts.append(f"Address: {cv_data['address']}")
         
         if contact_parts:
-            contact_text = "<br/>".join(contact_parts)
-            left_content += f"""
-            <para fontSize="10" textColor="#37474F" spaceAfter="20">
-            {contact_text}
-            </para>
-            """
+            contact_text = " | ".join(contact_parts)
+            contact = Paragraph(contact_text, self.styles['ContactInfo'])
+            elements.append(contact)
         
-        header_data.append([Paragraph(left_content, self.styles['Normal'])])
-        
-        header_table = Table(header_data, colWidths=[16*cm])
-        header_table.setStyle(TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 30),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 20),
-            ('TOPPADDING', (0, 0), (-1, -1), 15),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 15),
-            ('BACKGROUND', (0, 0), (0, 0), colors.HexColor('#F8F9FA')),
-            ('LINEBELOW', (0, 0), (-1, -1), 3, colors.HexColor('#1A237E')),
-        ]))
-        
-        elements.append(header_table)
-        elements.append(Spacer(1, 20))
+        # Add elegant divider
+        elements.append(HRFlowable(width="100%", thickness=3, lineCap='round', 
+                                 color=colors.HexColor('#1A237E'), spaceBefore=10, spaceAfter=20))
         
         return elements
     
