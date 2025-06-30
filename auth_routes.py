@@ -127,6 +127,55 @@ def fix_admin():
             admin.name = 'Admin User'
             
         db.session.commit()
-        return f"Fixed admin account: {admin.email}<br><a href='/admin/check-admin'>Check Admin</a><br><a href='/admin/login'>Login</a>"
+        return f"Fixed admin account: {admin.email}<br><a href='/admin/check-admin'>Check Admin</a><br><a href='/admin/set-password'>Set Password</a><br><a href='/admin/login'>Login</a>"
     else:
         return "No admin account found to fix.<br><a href='/admin/check-admin'>Check Admin</a>"
+
+@auth_bp.route('/set-password', methods=['GET', 'POST'])
+def set_password():
+    """Set password for admin account"""
+    admin = Admin.query.filter_by(email='admin@cvmaker.com').first()
+    
+    if not admin:
+        return "No admin account found.<br><a href='/admin/check-admin'>Check Admin</a>"
+    
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if not password or not confirm_password:
+            return "Both password fields are required.<br><a href='/admin/set-password'>Try Again</a>"
+        
+        if password != confirm_password:
+            return "Passwords do not match.<br><a href='/admin/set-password'>Try Again</a>"
+        
+        if len(password) < 6:
+            return "Password must be at least 6 characters long.<br><a href='/admin/set-password'>Try Again</a>"
+        
+        # Set the password
+        admin.set_password(password)
+        db.session.commit()
+        
+        return f"Password set successfully for {admin.email}!<br><a href='/admin/login'>Login Now</a>"
+    
+    return '''
+    <html>
+    <head><title>Set Admin Password</title></head>
+    <body>
+        <h2>Set Password for admin@cvmaker.com</h2>
+        <form method="POST">
+            <div>
+                <label>New Password:</label><br>
+                <input type="password" name="password" required minlength="6">
+            </div><br>
+            <div>
+                <label>Confirm Password:</label><br>
+                <input type="password" name="confirm_password" required minlength="6">
+            </div><br>
+            <button type="submit">Set Password</button>
+        </form>
+        <br>
+        <a href="/admin/check-admin">Back to Check Admin</a>
+    </body>
+    </html>
+    '''
