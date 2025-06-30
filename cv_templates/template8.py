@@ -1,13 +1,14 @@
 
 """
-Healthcare Professional CV Template
-Designed for doctors, nurses, and healthcare professionals
+Professional Sales CV Template
+Clean, modern design for sales professionals
 """
 
 import json
 import logging
+import os
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch, mm, cm
 from reportlab.lib import colors
@@ -19,27 +20,27 @@ class TemplateGenerator:
         self.setup_custom_styles()
         
     def setup_custom_styles(self):
-        """Setup healthcare-focused styles"""
-        # Medical header
+        """Setup professional sales-focused styles"""
+        # Header name
         self.styles.add(ParagraphStyle(
             name='HeaderName',
             parent=self.styles['Title'],
-            fontSize=26,
-            spaceAfter=6,
-            alignment=TA_CENTER,
-            textColor=colors.HexColor('#C62828'),
+            fontSize=28,
+            spaceAfter=4,
+            alignment=TA_LEFT,
+            textColor=colors.black,
             fontName='Helvetica-Bold'
         ))
         
-        # Medical credentials
+        # Job title
         self.styles.add(ParagraphStyle(
-            name='Credentials',
+            name='JobTitle',
             parent=self.styles['Normal'],
-            fontSize=12,
-            alignment=TA_CENTER,
-            spaceAfter=4,
-            textColor=colors.HexColor('#D32F2F'),
-            fontName='Helvetica-Bold'
+            fontSize=14,
+            spaceAfter=16,
+            alignment=TA_LEFT,
+            textColor=colors.HexColor('#666666'),
+            fontName='Helvetica'
         ))
         
         # Contact info
@@ -47,84 +48,132 @@ class TemplateGenerator:
             name='ContactInfo',
             parent=self.styles['Normal'],
             fontSize=10,
-            alignment=TA_CENTER,
-            spaceAfter=18,
-            textColor=colors.HexColor('#424242')
+            spaceAfter=4,
+            textColor=colors.black,
+            fontName='Helvetica'
         ))
         
-        # Medical section headings
+        # Summary
+        self.styles.add(ParagraphStyle(
+            name='Summary',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            spaceAfter=16,
+            alignment=TA_JUSTIFY,
+            textColor=colors.black,
+            fontName='Helvetica'
+        ))
+        
+        # Section headings with icons
         self.styles.add(ParagraphStyle(
             name='SectionHeading',
             parent=self.styles['Heading2'],
             fontSize=14,
-            spaceBefore=18,
-            spaceAfter=8,
-            textColor=colors.white,
+            spaceBefore=20,
+            spaceAfter=12,
+            textColor=colors.black,
             fontName='Helvetica-Bold',
-            backColor=colors.HexColor('#D32F2F'),
-            borderPadding=6
+            backColor=colors.HexColor('#F5F5F5'),
+            borderPadding=8
         ))
         
-        # Position/specialty
+        # Job position
         self.styles.add(ParagraphStyle(
-            name='Position',
+            name='JobPosition',
+            parent=self.styles['Normal'],
+            fontSize=12,
+            spaceBefore=12,
+            spaceAfter=2,
+            fontName='Helvetica-Bold',
+            textColor=colors.black
+        ))
+        
+        # Company name
+        self.styles.add(ParagraphStyle(
+            name='CompanyName',
+            parent=self.styles['Normal'],
+            fontSize=11,
+            spaceAfter=2,
+            fontName='Helvetica',
+            textColor=colors.HexColor('#666666'),
+            fontStyle='italic'
+        ))
+        
+        # Date range
+        self.styles.add(ParagraphStyle(
+            name='DateRange',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            spaceAfter=8,
+            textColor=colors.HexColor('#666666'),
+            fontName='Helvetica'
+        ))
+        
+        # Bullet points
+        self.styles.add(ParagraphStyle(
+            name='BulletPoint',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            spaceAfter=3,
+            textColor=colors.black,
+            fontName='Helvetica',
+            bulletIndent=12,
+            leftIndent=18
+        ))
+        
+        # Key achievement
+        self.styles.add(ParagraphStyle(
+            name='KeyAchievement',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            spaceAfter=8,
+            textColor=colors.black,
+            fontName='Helvetica-Bold',
+            leftIndent=18
+        ))
+        
+        # Education degree
+        self.styles.add(ParagraphStyle(
+            name='EducationDegree',
             parent=self.styles['Normal'],
             fontSize=12,
             spaceBefore=8,
             spaceAfter=2,
             fontName='Helvetica-Bold',
-            textColor=colors.HexColor('#C62828')
+            textColor=colors.black
         ))
         
-        # Medical facility
+        # Education school
         self.styles.add(ParagraphStyle(
-            name='Facility',
+            name='EducationSchool',
             parent=self.styles['Normal'],
             fontSize=11,
             spaceAfter=2,
             fontName='Helvetica',
-            textColor=colors.HexColor('#424242')
+            textColor=colors.HexColor('#666666'),
+            fontStyle='italic'
         ))
         
-        # Medical dates
+        # Skill name
         self.styles.add(ParagraphStyle(
-            name='MedicalDate',
+            name='SkillName',
             parent=self.styles['Normal'],
-            fontSize=10,
-            spaceAfter=4,
-            textColor=colors.HexColor('#757575')
-        ))
-        
-        # Clinical description
-        self.styles.add(ParagraphStyle(
-            name='Clinical',
-            parent=self.styles['Normal'],
-            fontSize=10,
-            spaceAfter=8,
-            alignment=TA_JUSTIFY,
-            textColor=colors.HexColor('#212121')
-        ))
-        
-        # Certification style
-        self.styles.add(ParagraphStyle(
-            name='Certification',
-            parent=self.styles['Normal'],
-            fontSize=10,
-            spaceAfter=4,
-            textColor=colors.HexColor('#C62828'),
-            fontName='Helvetica-Bold'
+            fontSize=11,
+            spaceAfter=6,
+            fontName='Helvetica',
+            textColor=colors.black
         ))
     
     def generate(self, cv_data, filepath):
-        """Generate healthcare CV"""
+        """Generate professional sales CV"""
         try:
             doc = SimpleDocTemplate(
                 filepath,
                 pagesize=A4,
-                rightMargin=22*mm,
-                leftMargin=22*mm,
-                topMargin=20*mm,
-                bottomMargin=20*mm
+                rightMargin=25*mm,
+                leftMargin=25*mm,
+                topMargin=25*mm,
+                bottomMargin=25*mm
             )
             
             story = []
@@ -136,17 +185,22 @@ class TemplateGenerator:
             if cv_data.get('summary'):
                 story.extend(self._create_summary_section(cv_data['summary']))
             
-            # Clinical experience
+            # Experience
             if cv_data.get('experience'):
                 story.extend(self._create_experience_section(cv_data['experience']))
             
-            # Medical education
+            # Education
             if cv_data.get('education'):
                 story.extend(self._create_education_section(cv_data['education']))
             
-            # Clinical skills & certifications
+            # Skills
             if cv_data.get('skills'):
                 story.extend(self._create_skills_section(cv_data['skills']))
+            
+            # Languages (if available)
+            languages = cv_data.get('languages', [])
+            if languages:
+                story.extend(self._create_languages_section(languages))
             
             doc.build(story)
             logging.info(f"Template8 CV generated: {filepath}")
@@ -157,99 +211,56 @@ class TemplateGenerator:
             return False
     
     def _create_header(self, cv_data):
-        """Create medical header with photo support"""
-        import os
-        elements = []
-        
-        # Check if profile photo exists
-        profile_photo_path = cv_data.get('profile_photo')
-        if profile_photo_path and os.path.exists(profile_photo_path):
-            try:
-                from reportlab.platypus import Image, Table, TableStyle
-                img = Image(profile_photo_path, width=55*mm, height=55*mm)
-                
-                # Create info content
-                info_content = []
-                name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
-                info_content.append(name)
-                credentials = Paragraph("M.D. | Healthcare Professional", self.styles['Credentials'])
-                info_content.append(credentials)
-                
-                # Contact info
-                contact_parts = []
-                if cv_data.get('phone'):
-                    contact_parts.append(f"☎ {cv_data['phone']}")
-                if cv_data.get('email'):
-                    contact_parts.append(f"✉ {cv_data['email']}")
-                if cv_data.get('address'):
-                    contact_parts.append(f"⚕ {cv_data['address']}")
-                
-                if contact_parts:
-                    contact_text = " | ".join(contact_parts)
-                    contact = Paragraph(contact_text, self.styles['ContactInfo'])
-                    info_content.append(contact)
-                
-                # Create table with photo and info
-                header_data = [[img, info_content]]
-                header_table = Table(header_data, colWidths=[65*mm, 125*mm])
-                header_table.setStyle(TableStyle([
-                    ('ALIGN', (0, 0), (0, 0), 'CENTER'),
-                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                    ('RIGHTPADDING', (0, 0), (-1, -1), 10),
-                ]))
-                elements.append(header_table)
-                
-            except Exception as e:
-                logging.error(f"Error adding photo to healthcare header: {str(e)}")
-                elements.extend(self._create_text_header(cv_data))
-        else:
-            elements.extend(self._create_text_header(cv_data))
-        
-        return elements
-    
-    def _create_text_header(self, cv_data):
-        """Create text-only header"""
+        """Create professional header"""
         elements = []
         
         # Name
         name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
         elements.append(name)
         
-        # Medical credentials
-        credentials = Paragraph("M.D. | Healthcare Professional", self.styles['Credentials'])
-        elements.append(credentials)
+        # Job title (use a default if not provided)
+        job_title = cv_data.get('job_title', 'Sales Representative')
+        title = Paragraph(job_title, self.styles['JobTitle'])
+        elements.append(title)
         
-        # Contact info with medical symbols
-        contact_parts = []
+        # Create contact info in two columns
+        contact_left = []
+        contact_right = []
+        
         if cv_data.get('phone'):
-            contact_parts.append(f"☎ {cv_data['phone']}")
+            contact_left.append(Paragraph(f"📞 {cv_data['phone']}", self.styles['ContactInfo']))
         if cv_data.get('email'):
-            contact_parts.append(f"✉ {cv_data['email']}")
-        if cv_data.get('address'):
-            contact_parts.append(f"⚕ {cv_data['address']}")
+            contact_left.append(Paragraph(f"✉ {cv_data['email']}", self.styles['ContactInfo']))
         
-        if contact_parts:
-            contact_text = " | ".join(contact_parts)
-            contact = Paragraph(contact_text, self.styles['ContactInfo'])
-            elements.append(contact)
+        if cv_data.get('website') or cv_data.get('linkedin'):
+            linkedin = cv_data.get('linkedin', cv_data.get('website', ''))
+            if linkedin:
+                contact_right.append(Paragraph(f"🔗 {linkedin}", self.styles['ContactInfo']))
         
+        if contact_left or contact_right:
+            contact_data = [[contact_left, contact_right]]
+            contact_table = Table(contact_data, colWidths=[85*mm, 85*mm])
+            contact_table.setStyle(TableStyle([
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+            ]))
+            elements.append(contact_table)
+        
+        elements.append(Spacer(1, 16))
         return elements
     
     def _create_summary_section(self, summary):
         """Create professional summary"""
         elements = []
-        heading = Paragraph("PROFESSIONAL SUMMARY", self.styles['SectionHeading'])
-        elements.append(heading)
-        summary_para = Paragraph(summary, self.styles['Clinical'])
+        summary_para = Paragraph(summary, self.styles['Summary'])
         elements.append(summary_para)
         return elements
     
     def _create_experience_section(self, experience_list):
-        """Create clinical experience section"""
+        """Create experience section"""
         elements = []
-        heading = Paragraph("CLINICAL EXPERIENCE", self.styles['SectionHeading'])
+        heading = Paragraph("💼 Experience", self.styles['SectionHeading'])
         elements.append(heading)
         
         for exp in experience_list:
@@ -259,47 +270,63 @@ class TemplateGenerator:
         return elements
     
     def _parse_experience_entry(self, experience_text):
-        """Parse medical experience entry"""
+        """Parse experience entry"""
         elements = []
         lines = [line.strip() for line in experience_text.split('\n') if line.strip()]
         
         if not lines:
             return elements
         
+        # Parse first line for position and company
         first_line = lines[0]
+        position = ""
+        company = ""
+        
         if ' at ' in first_line:
             parts = first_line.split(' at ', 1)
             position = parts[0].strip()
-            facility = parts[1].strip()
+            company = parts[1].strip()
         else:
             position = first_line
-            facility = ""
         
-        elements.append(Paragraph(f"⚕ {position}", self.styles['Position']))
-        if facility:
-            elements.append(Paragraph(facility, self.styles['Facility']))
+        # Add position and company
+        if position:
+            elements.append(Paragraph(position, self.styles['JobPosition']))
+        if company:
+            elements.append(Paragraph(company, self.styles['CompanyName']))
         
-        # Find dates and responsibilities
-        for line in lines[1:]:
-            if any(keyword in line.lower() for keyword in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
-                                                          'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
-                                                          '20', '19', 'present', 'current', '-']):
-                elements.append(Paragraph(f"📅 {line}", self.styles['MedicalDate']))
-            else:
-                # Highlight clinical responsibilities
-                if any(keyword in line.lower() for keyword in ['patient', 'diagnosis', 'treatment', 'surgery', 'care', 'clinical']):
-                    clinical_text = f"• {line}"
-                    elements.append(Paragraph(clinical_text, self.styles['Clinical']))
+        # Find and add date range
+        date_line = None
+        for i, line in enumerate(lines[1:], 1):
+            if any(keyword in line.lower() for keyword in ['20', '19', 'present', 'current', '-']) and len(line) < 30:
+                date_line = line
+                elements.append(Paragraph(date_line, self.styles['DateRange']))
+                break
+        
+        # Add bullet points and key achievements
+        start_idx = 2 if date_line else 1
+        key_achievement = None
+        
+        for line in lines[start_idx:]:
+            if line and not any(keyword in line.lower() for keyword in ['20', '19', 'present', 'current']):
+                # Check if this looks like a key achievement (contains numbers, percentages, etc.)
+                if any(indicator in line for indicator in ['$', '%', 'million', 'thousand', 'increased', 'achieved', 'over']):
+                    if not key_achievement:  # Only take the first key achievement
+                        key_achievement = line
+                        elements.append(Paragraph(f"Key Achievement", self.styles['KeyAchievement']))
+                        elements.append(Paragraph(line, self.styles['Summary']))
+                    else:
+                        elements.append(Paragraph(f"• {line}", self.styles['BulletPoint']))
                 else:
-                    elements.append(Paragraph(line, self.styles['Clinical']))
+                    elements.append(Paragraph(f"• {line}", self.styles['BulletPoint']))
         
         elements.append(Spacer(1, 8))
         return elements
     
     def _create_education_section(self, education_list):
-        """Create medical education section"""
+        """Create education section"""
         elements = []
-        heading = Paragraph("MEDICAL EDUCATION", self.styles['SectionHeading'])
+        heading = Paragraph("🎓 Education", self.styles['SectionHeading'])
         elements.append(heading)
         
         for edu in education_list:
@@ -309,7 +336,7 @@ class TemplateGenerator:
         return elements
     
     def _parse_education_entry(self, education_text):
-        """Parse medical education entry"""
+        """Parse education entry"""
         elements = []
         lines = [line.strip() for line in education_text.split('\n') if line.strip()]
         
@@ -317,76 +344,121 @@ class TemplateGenerator:
             return elements
         
         first_line = lines[0]
+        degree = ""
+        school = ""
+        
         if ' at ' in first_line or ' from ' in first_line:
             parts = first_line.split(' at ' if ' at ' in first_line else ' from ', 1)
             degree = parts[0].strip()
-            institution = parts[1].strip()
+            school = parts[1].strip()
         else:
             degree = first_line
-            institution = ""
         
-        elements.append(Paragraph(f"🎓 {degree}", self.styles['Position']))
-        if institution:
-            elements.append(Paragraph(institution, self.styles['Facility']))
+        if degree:
+            elements.append(Paragraph(degree, self.styles['EducationDegree']))
+        if school:
+            elements.append(Paragraph(school, self.styles['EducationSchool']))
         
-        # Add additional education details
+        # Add year and additional details
         for line in lines[1:]:
             if any(keyword in line for keyword in ['20', '19']) and len(line) < 20:
-                elements.append(Paragraph(f"📅 {line}", self.styles['MedicalDate']))
-            else:
-                elements.append(Paragraph(line, self.styles['Clinical']))
+                elements.append(Paragraph(line, self.styles['DateRange']))
+            elif line and not any(keyword in line for keyword in ['20', '19']):
+                elements.append(Paragraph(line, self.styles['Summary']))
         
-        elements.append(Spacer(1, 6))
+        elements.append(Spacer(1, 8))
         return elements
     
     def _create_skills_section(self, skills_list):
-        """Create clinical skills and certifications"""
+        """Create skills section with rating bars"""
         elements = []
-        heading = Paragraph("CLINICAL SKILLS & CERTIFICATIONS", self.styles['SectionHeading'])
+        heading = Paragraph("⚙ Skills", self.styles['SectionHeading'])
         elements.append(heading)
         
         if isinstance(skills_list, list):
-            # Categorize skills
-            clinical_skills = []
-            certifications = []
-            technical_skills = []
-            
             for skill in skills_list:
-                skill_lower = skill.lower()
-                if any(cert in skill_lower for cert in ['certification', 'certified', 'license', 'board']):
-                    certifications.append(skill)
-                elif any(clinical in skill_lower for clinical in ['patient', 'surgery', 'diagnosis', 'treatment', 'clinical']):
-                    clinical_skills.append(skill)
-                else:
-                    technical_skills.append(skill)
-            
-            # Display certifications first
-            if certifications:
-                cert_heading = Paragraph("Certifications & Licenses:", self.styles['Certification'])
-                elements.append(cert_heading)
-                for cert in certifications:
-                    cert_para = Paragraph(f"✓ {cert}", self.styles['Clinical'])
-                    elements.append(cert_para)
+                # Create skill with rating visualization
+                skill_table = self._create_skill_with_rating(skill)
+                elements.append(skill_table)
                 elements.append(Spacer(1, 6))
-            
-            # Clinical skills
-            if clinical_skills:
-                clinical_heading = Paragraph("Clinical Competencies:", self.styles['Certification'])
-                elements.append(clinical_heading)
-                for skill in clinical_skills:
-                    skill_para = Paragraph(f"⚕ {skill}", self.styles['Clinical'])
-                    elements.append(skill_para)
-                elements.append(Spacer(1, 6))
-            
-            # Technical skills
-            if technical_skills:
-                tech_heading = Paragraph("Technical Skills:", self.styles['Certification'])
-                elements.append(tech_heading)
-                for skill in technical_skills:
-                    skill_para = Paragraph(f"• {skill}", self.styles['Clinical'])
-                    elements.append(skill_para)
         else:
-            skills_para = Paragraph(f"⚕ {str(skills_list)}", self.styles['Clinical'])
-            elements.append(skills_para)
+            skills_text = str(skills_list)
+            for skill in skills_text.split(','):
+                skill = skill.strip()
+                if skill:
+                    skill_table = self._create_skill_with_rating(skill)
+                    elements.append(skill_table)
+                    elements.append(Spacer(1, 6))
         
         return elements
+    
+    def _create_skill_with_rating(self, skill_name):
+        """Create skill with rating bars"""
+        # Create rating bars (4 out of 5 filled as default)
+        filled_bar = "■"
+        empty_bar = "□"
+        rating = filled_bar * 4 + empty_bar * 1
+        
+        skill_data = [[
+            Paragraph(skill_name, self.styles['SkillName']),
+            Paragraph(rating, self.styles['SkillName'])
+        ]]
+        
+        skill_table = Table(skill_data, colWidths=[120*mm, 40*mm])
+        skill_table.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+        ]))
+        
+        return skill_table
+    
+    def _create_languages_section(self, languages_list):
+        """Create languages section"""
+        elements = []
+        heading = Paragraph("🗣 Languages", self.styles['SectionHeading'])
+        elements.append(heading)
+        
+        if isinstance(languages_list, list):
+            for lang in languages_list:
+                # Add proficiency level (default to intermediate)
+                lang_table = self._create_language_with_level(lang)
+                elements.append(lang_table)
+                elements.append(Spacer(1, 6))
+        else:
+            lang_text = str(languages_list)
+            for lang in lang_text.split(','):
+                lang = lang.strip()
+                if lang:
+                    lang_table = self._create_language_with_level(lang)
+                    elements.append(lang_table)
+                    elements.append(Spacer(1, 6))
+        
+        return elements
+    
+    def _create_language_with_level(self, language):
+        """Create language with proficiency level"""
+        # Default proficiency visualization
+        filled_bar = "■"
+        empty_bar = "□"
+        proficiency = filled_bar * 4 + empty_bar * 1
+        level_text = "C1 Certified" if "spanish" in language.lower() else "Fluent"
+        
+        lang_data = [[
+            Paragraph(language, self.styles['SkillName']),
+            Paragraph(proficiency, self.styles['SkillName'])
+        ]]
+        
+        lang_table = Table(lang_data, colWidths=[120*mm, 40*mm])
+        lang_table.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+        ]))
+        
+        # Add level text below
+        level_para = Paragraph(level_text, self.styles['ContactInfo'])
+        
+        return lang_table
