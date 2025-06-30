@@ -201,7 +201,7 @@ class TemplateGenerator:
             
             # Professional summary
             if cv_data.get('summary'):
-                story.extend(self._create_summary_section(cv_data['summary']))
+                story.extend(self._create_executive_summary(cv_data['summary']))
             
             # Professional experience
             if cv_data.get('experience'):

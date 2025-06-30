@@ -1,13 +1,13 @@
-
 """
-Sales Professional CV Template
-Designed for sales and business development professionals
+Elegant Modern CV Template
+Clean, sophisticated design with excellent typography and layout balance
 """
 
 import json
 import logging
+import os
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, KeepTogether, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch, mm, cm
 from reportlab.lib import colors
@@ -16,310 +16,384 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 class TemplateGenerator:
     def __init__(self):
         self.styles = getSampleStyleSheet()
-        self.setup_custom_styles()
+        self.color_schemes = {
+            'blue': {
+                'primary': colors.HexColor('#1E3A8A'),
+                'secondary': colors.HexColor('#3B82F6'),
+                'accent': colors.HexColor('#60A5FA'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#F8FAFC')
+            },
+            'green': {
+                'primary': colors.HexColor('#065F46'),
+                'secondary': colors.HexColor('#059669'),
+                'accent': colors.HexColor('#34D399'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#F0FDF4')
+            },
+            'red': {
+                'primary': colors.HexColor('#991B1B'),
+                'secondary': colors.HexColor('#DC2626'),
+                'accent': colors.HexColor('#F87171'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#FEF2F2')
+            },
+            'purple': {
+                'primary': colors.HexColor('#6B21A8'),
+                'secondary': colors.HexColor('#9333EA'),
+                'accent': colors.HexColor('#C084FC'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#FAF5FF')
+            },
+            'orange': {
+                'primary': colors.HexColor('#C2410C'),
+                'secondary': colors.HexColor('#EA580C'),
+                'accent': colors.HexColor('#FB923C'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#FFF7ED')
+            },
+            'navy': {
+                'primary': colors.HexColor('#1E293B'),
+                'secondary': colors.HexColor('#334155'),
+                'accent': colors.HexColor('#64748B'),
+                'text': colors.HexColor('#1F2937'),
+                'light_bg': colors.HexColor('#F8FAFC')
+            }
+        }
         
-    def setup_custom_styles(self):
-        """Setup sales-focused styles"""
-        # Professional sales header
+    def setup_custom_styles(self, color_scheme='blue'):
+        """Setup elegant modern styles with dynamic colors"""
+        self.colors = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
+        
+        # Elegant name style
         self.styles.add(ParagraphStyle(
-            name='HeaderName',
-            parent=self.styles['Title'],
-            fontSize=28,
-            spaceAfter=8,
+            name='ElegantName',
+            parent=self.styles['Normal'],
+            fontSize=42,
+            fontName='Helvetica-Bold',
+            textColor=self.colors['primary'],
             alignment=TA_CENTER,
-            textColor=colors.HexColor('#1B5E20'),
-            fontName='Helvetica-Bold'
+            spaceAfter=8,
+            spaceBefore=30
         ))
         
-        # Business contact style
+        # Professional title
+        self.styles.add(ParagraphStyle(
+            name='ProfessionalTitle',
+            parent=self.styles['Normal'],
+            fontSize=16,
+            fontName='Helvetica',
+            textColor=self.colors['secondary'],
+            alignment=TA_CENTER,
+            spaceAfter=25
+        ))
+        
+        # Contact info in elegant format
         self.styles.add(ParagraphStyle(
             name='ContactInfo',
             parent=self.styles['Normal'],
             fontSize=11,
+            fontName='Helvetica',
+            textColor=self.colors['text'],
             alignment=TA_CENTER,
-            spaceAfter=18,
-            textColor=colors.HexColor('#424242')
+            spaceAfter=30
         ))
         
-        # Achievement-focused sections
+        # Section headings with elegant underline
         self.styles.add(ParagraphStyle(
             name='SectionHeading',
-            parent=self.styles['Heading2'],
-            fontSize=16,
-            spaceBefore=18,
-            spaceAfter=10,
-            textColor=colors.white,
+            parent=self.styles['Normal'],
+            fontSize=18,
             fontName='Helvetica-Bold',
-            backColor=colors.HexColor('#388E3C'),
-            borderPadding=8,
-            alignment=TA_CENTER
+            textColor=self.colors['primary'],
+            alignment=TA_LEFT,
+            spaceBefore=25,
+            spaceAfter=15,
+            borderWidth=1,
+            borderColor=self.colors['accent'],
+            borderPadding=5
         ))
         
-        # Results-focused job title
+        # Professional summary style
+        self.styles.add(ParagraphStyle(
+            name='Summary',
+            parent=self.styles['Normal'],
+            fontSize=12,
+            fontName='Helvetica',
+            textColor=self.colors['text'],
+            alignment=TA_JUSTIFY,
+            spaceAfter=20,
+            leading=18,
+            backColor=self.colors['light_bg'],
+            borderPadding=15
+        ))
+        
+        # Job title
         self.styles.add(ParagraphStyle(
             name='JobTitle',
             parent=self.styles['Normal'],
-            fontSize=13,
-            spaceBefore=10,
-            spaceAfter=3,
+            fontSize=14,
             fontName='Helvetica-Bold',
-            textColor=colors.HexColor('#1B5E20')
+            textColor=self.colors['primary'],
+            alignment=TA_LEFT,
+            spaceBefore=12,
+            spaceAfter=4
         ))
         
-        # Company style
+        # Company/Organization
         self.styles.add(ParagraphStyle(
             name='Organization',
             parent=self.styles['Normal'],
             fontSize=12,
-            spaceAfter=2,
-            fontName='Helvetica-Oblique',
-            textColor=colors.HexColor('#2E7D32')
+            fontName='Helvetica',
+            textColor=self.colors['secondary'],
+            alignment=TA_LEFT,
+            spaceAfter=4
         ))
         
-        # Achievement-focused description
+        # Date range
         self.styles.add(ParagraphStyle(
-            name='Achievement',
+            name='DateRange',
             parent=self.styles['Normal'],
             fontSize=10,
-            spaceAfter=6,
+            fontName='Helvetica',
+            textColor=colors.HexColor('#6B7280'),
             alignment=TA_LEFT,
-            textColor=colors.HexColor('#1B5E20'),
-            leftIndent=15,
-            fontName='Helvetica-Bold'
+            spaceAfter=8
         ))
         
-        # Regular description
+        # Description text
         self.styles.add(ParagraphStyle(
             name='Description',
             parent=self.styles['Normal'],
-            fontSize=10,
-            spaceAfter=8,
-            alignment=TA_JUSTIFY,
-            textColor=colors.HexColor('#212121')
+            fontSize=11,
+            fontName='Helvetica',
+            textColor=self.colors['text'],
+            alignment=TA_LEFT,
+            spaceAfter=12,
+            leading=16,
+            leftIndent=20
         ))
-    
-    def generate(self, cv_data, filepath):
-        """Generate sales-focused CV"""
+        
+        # Skills list
+        self.styles.add(ParagraphStyle(
+            name='SkillItem',
+            parent=self.styles['Normal'],
+            fontSize=11,
+            fontName='Helvetica',
+            textColor=self.colors['text'],
+            alignment=TA_LEFT,
+            spaceAfter=6,
+            leftIndent=15
+        ))
+
+    def generate(self, cv_data, filepath, color_scheme='blue'):
+        """Generate elegant modern CV"""
         try:
+            self.setup_custom_styles(color_scheme)
+            
+            # Create PDF document
             doc = SimpleDocTemplate(
                 filepath,
                 pagesize=A4,
-                rightMargin=22*mm,
-                leftMargin=22*mm,
-                topMargin=20*mm,
-                bottomMargin=20*mm
+                rightMargin=50,
+                leftMargin=50,
+                topMargin=40,
+                bottomMargin=40
             )
             
             story = []
             
-            # Header
-            story.extend(self._create_header(cv_data))
+            # Header with photo and name
+            header_content = self._create_elegant_header(cv_data)
+            story.extend(header_content)
             
-            # Value proposition
+            # Professional summary
             if cv_data.get('summary'):
-                story.extend(self._create_summary_section(cv_data['summary']))
+                story.append(Paragraph("PROFESSIONAL SUMMARY", self.styles['SectionHeading']))
+                story.append(Paragraph(cv_data['summary'], self.styles['Summary']))
             
-            # Sales experience
+            # Work experience
             if cv_data.get('experience'):
+                story.append(Paragraph("PROFESSIONAL EXPERIENCE", self.styles['SectionHeading']))
                 story.extend(self._create_experience_section(cv_data['experience']))
             
             # Education
             if cv_data.get('education'):
+                story.append(Paragraph("EDUCATION", self.styles['SectionHeading']))
                 story.extend(self._create_education_section(cv_data['education']))
             
-            # Core competencies
+            # Skills
             if cv_data.get('skills'):
+                story.append(Paragraph("CORE COMPETENCIES", self.styles['SectionHeading']))
                 story.extend(self._create_skills_section(cv_data['skills']))
             
             doc.build(story)
-            logging.info(f"Template6 CV generated: {filepath}")
+            logging.info(f"Elegant modern CV generated: {filepath}")
             return True
             
         except Exception as e:
-            logging.error(f"Error generating Template6 CV: {str(e)}")
+            logging.error(f"Error generating elegant modern CV: {str(e)}")
             return False
-    
-    def _create_header(self, cv_data):
-        """Create professional sales header with photo support"""
-        elements = []
+
+    def _create_elegant_header(self, cv_data):
+        """Create elegant header with optional photo"""
+        content = []
         
-        # Check if profile photo exists
-        profile_photo_path = cv_data.get('profile_photo')
-        if profile_photo_path and os.path.exists(profile_photo_path):
+        # Profile photo if available
+        if cv_data.get('profile_photo') and os.path.exists(cv_data['profile_photo']):
             try:
-                from reportlab.platypus import Image
-                img = Image(profile_photo_path, width=60*mm, height=60*mm)
-                
-                # Create info content
-                info_content = []
-                name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
-                info_content.append(name)
-                tagline = Paragraph("SALES PROFESSIONAL", self.styles['ContactInfo'])
-                info_content.append(tagline)
-                
-                # Contact info
-                contact_parts = []
-                if cv_data.get('phone'):
-                    contact_parts.append(f"📱 {cv_data['phone']}")
-                if cv_data.get('email'):
-                    contact_parts.append(f"📧 {cv_data['email']}")
-                if cv_data.get('address'):
-                    contact_parts.append(f"📍 {cv_data['address']}")
-                
-                if contact_parts:
-                    contact_text = " | ".join(contact_parts)
-                    contact = Paragraph(contact_text, self.styles['ContactInfo'])
-                    info_content.append(contact)
-                
-                # Create table with photo and info
-                header_data = [[img, info_content]]
-                header_table = Table(header_data, colWidths=[70*mm, 120*mm])
-                header_table.setStyle(TableStyle([
-                    ('ALIGN', (0, 0), (0, 0), 'CENTER'),
-                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                    ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+                # Create a table to center the photo
+                img = Image(cv_data['profile_photo'], width=100, height=100)
+                photo_table = Table([[img]], colWidths=[100])
+                photo_table.setStyle(TableStyle([
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                 ]))
-                elements.append(header_table)
-                
-            except Exception as e:
-                logging.error(f"Error adding photo to sales header: {str(e)}")
-                elements.extend(self._create_text_header(cv_data))
-        else:
-            elements.extend(self._create_text_header(cv_data))
-        
-        return elements
-    
-    def _create_text_header(self, cv_data):
-        """Create text-only header"""
-        elements = []
+                content.append(photo_table)
+                content.append(Spacer(1, 15))
+            except:
+                pass
         
         # Name
-        name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
-        elements.append(name)
+        content.append(Paragraph(cv_data.get('full_name', 'Your Name'), self.styles['ElegantName']))
         
-        # Professional tagline
-        tagline = Paragraph("SALES PROFESSIONAL", self.styles['ContactInfo'])
-        elements.append(tagline)
+        # Professional title (placeholder for now)
+        content.append(Paragraph("PROFESSIONAL CONSULTANT", self.styles['ProfessionalTitle']))
         
-        # Contact info
+        # Contact information in a line
         contact_parts = []
-        if cv_data.get('phone'):
-            contact_parts.append(f"📱 {cv_data['phone']}")
         if cv_data.get('email'):
-            contact_parts.append(f"📧 {cv_data['email']}")
+            contact_parts.append(f"✉ {cv_data['email']}")
+        if cv_data.get('phone'):
+            contact_parts.append(f"📞 {cv_data['phone']}")
         if cv_data.get('address'):
             contact_parts.append(f"📍 {cv_data['address']}")
         
         if contact_parts:
-            contact_text = " | ".join(contact_parts)
-            contact = Paragraph(contact_text, self.styles['ContactInfo'])
-            elements.append(contact)
+            contact_text = " • ".join(contact_parts)
+            content.append(Paragraph(contact_text, self.styles['ContactInfo']))
         
-        return elements
-    
-    def _create_summary_section(self, summary):
-        """Create value proposition section"""
-        elements = []
-        heading = Paragraph("VALUE PROPOSITION", self.styles['SectionHeading'])
-        elements.append(heading)
-        summary_para = Paragraph(summary, self.styles['Description'])
-        elements.append(summary_para)
-        return elements
-    
-    def _create_experience_section(self, experience_list):
-        """Create achievement-focused experience"""
-        elements = []
-        heading = Paragraph("SALES ACHIEVEMENTS", self.styles['SectionHeading'])
-        elements.append(heading)
+        return content
+
+    def _create_experience_section(self, experience_data):
+        """Create professional experience section"""
+        content = []
         
-        for exp in experience_list:
-            exp_elements = self._parse_experience_entry(exp)
-            elements.extend(exp_elements)
-        
-        return elements
-    
-    def _parse_experience_entry(self, experience_text):
-        """Parse with achievement focus"""
-        elements = []
-        lines = [line.strip() for line in experience_text.split('\n') if line.strip()]
-        
-        if not lines:
-            return elements
-        
-        first_line = lines[0]
-        if ' at ' in first_line:
-            parts = first_line.split(' at ', 1)
-            job_title = parts[0].strip()
-            company = parts[1].strip()
-        else:
-            job_title = first_line
-            company = ""
-        
-        elements.append(Paragraph(job_title, self.styles['JobTitle']))
-        if company:
-            elements.append(Paragraph(company, self.styles['Organization']))
-        
-        # Highlight achievements with numbers/percentages
-        for line in lines[1:]:
-            # Check if line contains achievements (numbers, percentages, etc.)
-            if any(indicator in line for indicator in ['%', '$', 'million', 'thousand', 'increased', 'achieved', 'exceeded', 'generated']):
-                achievement_text = f"★ {line}"
-                elements.append(Paragraph(achievement_text, self.styles['Achievement']))
-            elif any(keyword in line.lower() for keyword in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
-                                                            'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
-                                                            '20', '19', 'present', 'current', '-']):
-                # Date formatting
-                date_text = f"📅 {line}"
-                elements.append(Paragraph(date_text, self.styles['Description']))
+        try:
+            exp_data = json.loads(experience_data) if isinstance(experience_data, str) else experience_data
+            if isinstance(exp_data, list):
+                for exp in exp_data:
+                    exp_content = self._parse_experience_entry(exp)
+                    content.extend(exp_content)
             else:
-                elements.append(Paragraph(line, self.styles['Description']))
+                content.append(Paragraph(str(exp_data), self.styles['Description']))
+        except:
+            content.append(Paragraph(str(experience_data), self.styles['Description']))
         
-        elements.append(Spacer(1, 8))
-        return elements
-    
-    def _create_education_section(self, education_list):
-        """Create education section"""
-        elements = []
-        heading = Paragraph("EDUCATION & CERTIFICATIONS", self.styles['SectionHeading'])
-        elements.append(heading)
+        return content
+
+    def _parse_experience_entry(self, experience_text):
+        """Parse and format experience entry"""
+        content = []
         
-        for edu in education_list:
-            edu_para = Paragraph(f"🎓 {edu}", self.styles['Description'])
-            elements.append(edu_para)
-        
-        return elements
-    
-    def _create_skills_section(self, skills_list):
-        """Create core competencies section"""
-        elements = []
-        heading = Paragraph("CORE COMPETENCIES", self.styles['SectionHeading'])
-        elements.append(heading)
-        
-        if isinstance(skills_list, list):
-            # Create table for better presentation
-            skills_rows = []
-            for i in range(0, len(skills_list), 2):
-                row = []
-                row.append(f"✓ {skills_list[i]}" if i < len(skills_list) else "")
-                row.append(f"✓ {skills_list[i+1]}" if i+1 < len(skills_list) else "")
-                skills_rows.append(row)
+        try:
+            if isinstance(experience_text, dict):
+                job_title = experience_text.get('title', 'Position')
+                company = experience_text.get('company', 'Company')
+                period = experience_text.get('period', 'Period')
+                description = experience_text.get('description', '')
+            else:
+                lines = str(experience_text).strip().split('\n')
+                job_title = lines[0] if len(lines) > 0 else 'Position'
+                company = lines[1] if len(lines) > 1 else 'Company'
+                period = lines[2] if len(lines) > 2 else 'Period'
+                description = '\n'.join(lines[3:]) if len(lines) > 3 else ''
             
-            if skills_rows:
-                skills_table = Table(skills_rows, colWidths=[8.5*cm, 8.5*cm])
-                skills_table.setStyle(TableStyle([
-                    ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                    ('FONTSIZE', (0, 0), (-1, -1), 11),
-                    ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#1B5E20')),
-                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                    ('TOPPADDING', (0, 0), (-1, -1), 3),
-                    ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
-                ]))
-                elements.append(skills_table)
-        else:
-            skills_para = Paragraph(f"✓ {str(skills_list)}", self.styles['Description'])
-            elements.append(skills_para)
+            content.append(Paragraph(job_title, self.styles['JobTitle']))
+            content.append(Paragraph(company, self.styles['Organization']))
+            content.append(Paragraph(period, self.styles['DateRange']))
+            
+            if description:
+                # Split description into bullet points if it contains multiple lines
+                if '\n' in description or '•' in description:
+                    desc_lines = description.replace('•', '').split('\n')
+                    for line in desc_lines:
+                        if line.strip():
+                            content.append(Paragraph(f"• {line.strip()}", self.styles['Description']))
+                else:
+                    content.append(Paragraph(description, self.styles['Description']))
+            
+            content.append(Spacer(1, 8))
+            
+        except Exception as e:
+            content.append(Paragraph(str(experience_text), self.styles['Description']))
         
-        return elements
+        return content
+
+    def _create_education_section(self, education_data):
+        """Create education section"""
+        content = []
+        
+        try:
+            edu_data = json.loads(education_data) if isinstance(education_data, str) else education_data
+            if isinstance(edu_data, list):
+                for edu in edu_data:
+                    edu_content = self._parse_education_entry(edu)
+                    content.extend(edu_content)
+            else:
+                content.append(Paragraph(str(edu_data), self.styles['Description']))
+        except:
+            content.append(Paragraph(str(education_data), self.styles['Description']))
+        
+        return content
+
+    def _parse_education_entry(self, education_text):
+        """Parse and format education entry"""
+        content = []
+        
+        try:
+            if isinstance(education_text, dict):
+                degree = education_text.get('degree', 'Degree')
+                institution = education_text.get('institution', 'Institution')
+                period = education_text.get('period', 'Period')
+                description = education_text.get('description', '')
+            else:
+                lines = str(education_text).strip().split('\n')
+                degree = lines[0] if len(lines) > 0 else 'Degree'
+                institution = lines[1] if len(lines) > 1 else 'Institution'
+                period = lines[2] if len(lines) > 2 else 'Period'
+                description = '\n'.join(lines[3:]) if len(lines) > 3 else ''
+            
+            content.append(Paragraph(degree, self.styles['JobTitle']))
+            content.append(Paragraph(institution, self.styles['Organization']))
+            content.append(Paragraph(period, self.styles['DateRange']))
+            
+            if description:
+                content.append(Paragraph(description, self.styles['Description']))
+            
+            content.append(Spacer(1, 8))
+            
+        except Exception as e:
+            content.append(Paragraph(str(education_text), self.styles['Description']))
+        
+        return content
+
+    def _create_skills_section(self, skills_data):
+        """Create skills section"""
+        content = []
+        
+        try:
+            skills_list = json.loads(skills_data) if isinstance(skills_data, str) else skills_data
+            if isinstance(skills_list, list):
+                # Create a nice grid of skills
+                skill_chunks = [skills_list[i:i+3] for i in range(0, len(skills_list), 3)]
+                for chunk in skill_chunks:
+                    skill_row = " • ".join(chunk)
+                    content.append(Paragraph(f"• {skill_row}", self.styles['SkillItem']))
+            else:
+                content.append(Paragraph(str(skills_data), self.styles['Description']))
+        except:
+            content.append(Paragraph(str(skills_data), self.styles['Description']))
+        
+        return content
