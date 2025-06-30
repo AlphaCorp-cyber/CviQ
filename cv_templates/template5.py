@@ -268,19 +268,23 @@ class TemplateGenerator:
                     other.append(skill)
             
             if programming:
-                prog_text = f"languages = [{', '.join([f'"{s}"' for s in programming])}]"
+                quoted_prog = [f'"{s}"' for s in programming]
+                prog_text = f"languages = [{', '.join(quoted_prog)}]"
                 elements.append(Paragraph(prog_text, self.styles['SkillsCode']))
             
             if frameworks:
-                fw_text = f"frameworks = [{', '.join([f'"{s}"' for s in frameworks])}]"
+                quoted_fw = [f'"{s}"' for s in frameworks]
+                fw_text = f"frameworks = [{', '.join(quoted_fw)}]"
                 elements.append(Paragraph(fw_text, self.styles['SkillsCode']))
             
             if tools:
-                tools_text = f"tools = [{', '.join([f'"{s}"' for s in tools])}]"
+                quoted_tools = [f'"{s}"' for s in tools]
+                tools_text = f"tools = [{', '.join(quoted_tools)}]"
                 elements.append(Paragraph(tools_text, self.styles['SkillsCode']))
             
             if other:
-                other_text = f"other = [{', '.join([f'"{s}"' for s in other])}]"
+                quoted_other = [f'"{s}"' for s in other]
+                other_text = f"other = [{', '.join(quoted_other)}]"
                 elements.append(Paragraph(other_text, self.styles['SkillsCode']))
         else:
             skills_text = f"skills = ['{str(skills_list)}']"
