@@ -104,8 +104,29 @@ def check_admin():
     if admins:
         result += "Existing admins:<br>"
         for admin in admins:
-            result += f"- Email: {admin.email}, Active: {admin.is_active}, Created: {admin.created_at}<br>"
+            result += f"- ID: {admin.id}, Email: {admin.email}, Name: {getattr(admin, 'name', 'N/A')}, Active: {admin.is_active}, Created: {admin.created_at}<br>"
+            result += f"  Password Hash: {'Set' if admin.password_hash else 'Missing'}<br><br>"
     else:
         result += "No admin accounts found. Visit /admin/setup to create one."
 
+    result += f"<br><a href='/admin/fix-admin'>Fix Admin Account</a>"
     return result
+
+@auth_bp.route('/fix-admin')
+def fix_admin():
+    """Fix admin account with None values"""
+    admin = Admin.query.filter_by(email='admin@cvmaker.com').first()
+    
+    if admin:
+        # Fix None values
+        if admin.is_active is None:
+            admin.is_active = True
+        if admin.created_at is None:
+            admin.created_at = datetime.utcnow()
+        if not hasattr(admin, 'name') or admin.name is None:
+            admin.name = 'Admin User'
+            
+        db.session.commit()
+        return f"Fixed admin account: {admin.email}<br><a href='/admin/check-admin'>Check Admin</a><br><a href='/admin/login'>Login</a>"
+    else:
+        return "No admin account found to fix.<br><a href='/admin/check-admin'>Check Admin</a>"
