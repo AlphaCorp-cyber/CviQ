@@ -86,6 +86,11 @@ class TemplateGenerator:
         
     def setup_custom_styles(self):
         """Setup professional two-column styles"""
+        # Clear existing styles to prevent conflicts
+        style_names = ['HeaderName', 'ContactInfo', 'SectionHeading', 'JobTitle', 'Organization', 'DateStyle', 'Description']
+        for style_name in style_names:
+            if style_name in self.styles.byName:
+                del self.styles.byName[style_name]
         # Header name style
         self.styles.add(ParagraphStyle(
             name='HeaderName',

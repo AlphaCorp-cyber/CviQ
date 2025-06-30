@@ -109,12 +109,9 @@ class TemplateGenerator:
             fontName='Helvetica-Bold',
             textColor=self.colors['accent'],
             alignment=TA_LEFT,
-            spaceBefore=20,
-            spaceAfter=12,
-            borderWidth=2,
-            borderColor=self.colors['accent'],
-            leftIndent=0,
-            borderPadding=(0, 0, 2, 0)  # Bottom border only
+            spaceBefore=25,
+            spaceAfter=15,
+            leftIndent=0
         ))
         
         # Professional summary
@@ -208,10 +205,10 @@ class TemplateGenerator:
             doc = SimpleDocTemplate(
                 filepath,
                 pagesize=A4,
-                rightMargin=45,
-                leftMargin=45,
-                topMargin=40,
-                bottomMargin=40
+                rightMargin=50,
+                leftMargin=50,
+                topMargin=50,
+                bottomMargin=50
             )
             
             story = []

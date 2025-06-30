@@ -1,6 +1,6 @@
 """
-Elegant Modern CV Template
-Clean, sophisticated design with excellent typography and layout balance
+Modern Sidebar CV Template
+Dark sidebar with contact info and skills, white main area with experience and education
 """
 
 import json
@@ -18,177 +18,164 @@ class TemplateGenerator:
         self.styles = getSampleStyleSheet()
         self.color_schemes = {
             'blue': {
-                'primary': colors.HexColor('#1E3A8A'),
-                'secondary': colors.HexColor('#3B82F6'),
-                'accent': colors.HexColor('#60A5FA'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#F8FAFC')
+                'sidebar': colors.HexColor('#2C3E50'),
+                'accent': colors.HexColor('#3498DB'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#2C3E50'),
+                'main_bg': colors.white
             },
             'green': {
-                'primary': colors.HexColor('#065F46'),
-                'secondary': colors.HexColor('#059669'),
-                'accent': colors.HexColor('#34D399'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#F0FDF4')
+                'sidebar': colors.HexColor('#27AE60'),
+                'accent': colors.HexColor('#2ECC71'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#27AE60'),
+                'main_bg': colors.white
             },
             'red': {
-                'primary': colors.HexColor('#991B1B'),
-                'secondary': colors.HexColor('#DC2626'),
-                'accent': colors.HexColor('#F87171'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#FEF2F2')
+                'sidebar': colors.HexColor('#C0392B'),
+                'accent': colors.HexColor('#E74C3C'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#C0392B'),
+                'main_bg': colors.white
             },
             'purple': {
-                'primary': colors.HexColor('#6B21A8'),
-                'secondary': colors.HexColor('#9333EA'),
-                'accent': colors.HexColor('#C084FC'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#FAF5FF')
+                'sidebar': colors.HexColor('#7D3C98'),
+                'accent': colors.HexColor('#9B59B6'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#7D3C98'),
+                'main_bg': colors.white
             },
             'orange': {
-                'primary': colors.HexColor('#C2410C'),
-                'secondary': colors.HexColor('#EA580C'),
-                'accent': colors.HexColor('#FB923C'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#FFF7ED')
+                'sidebar': colors.HexColor('#D35400'),
+                'accent': colors.HexColor('#E67E22'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#D35400'),
+                'main_bg': colors.white
             },
             'navy': {
-                'primary': colors.HexColor('#1E293B'),
-                'secondary': colors.HexColor('#334155'),
-                'accent': colors.HexColor('#64748B'),
-                'text': colors.HexColor('#1F2937'),
-                'light_bg': colors.HexColor('#F8FAFC')
+                'sidebar': colors.HexColor('#2C3E50'),
+                'accent': colors.HexColor('#34495E'),
+                'text_light': colors.white,
+                'text_dark': colors.HexColor('#2C3E50'),
+                'main_bg': colors.white
             }
         }
         
     def setup_custom_styles(self, color_scheme='blue'):
-        """Setup elegant modern styles with dynamic colors"""
+        """Setup sidebar CV styles with dynamic colors"""
         self.colors = self.color_schemes.get(color_scheme, self.color_schemes['blue'])
         
-        # Elegant name style
+        # Sidebar styles (white text on dark background)
         self.styles.add(ParagraphStyle(
-            name='ElegantName',
+            name='SidebarName',
             parent=self.styles['Normal'],
-            fontSize=36,
+            fontSize=24,
             fontName='Helvetica-Bold',
-            textColor=self.colors['primary'],
+            textColor=self.colors['text_light'],
             alignment=TA_CENTER,
-            spaceAfter=6,
-            spaceBefore=20
+            spaceAfter=5,
+            spaceBefore=15
         ))
         
-        # Professional title
         self.styles.add(ParagraphStyle(
-            name='ProfessionalTitle',
+            name='SidebarTitle',
             parent=self.styles['Normal'],
-            fontSize=14,
+            fontSize=12,
             fontName='Helvetica',
-            textColor=self.colors['secondary'],
+            textColor=self.colors['text_light'],
             alignment=TA_CENTER,
             spaceAfter=20
         ))
         
-        # Contact info in elegant format
         self.styles.add(ParagraphStyle(
-            name='ContactInfo',
+            name='SidebarHeading',
             parent=self.styles['Normal'],
-            fontSize=11,
-            fontName='Helvetica',
-            textColor=self.colors['text'],
-            alignment=TA_CENTER,
-            spaceAfter=30
+            fontSize=14,
+            fontName='Helvetica-Bold',
+            textColor=self.colors['text_light'],
+            alignment=TA_LEFT,
+            spaceBefore=15,
+            spaceAfter=8
         ))
         
-        # Section headings with elegant underline
         self.styles.add(ParagraphStyle(
-            name='SectionHeading',
+            name='SidebarText',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            fontName='Helvetica',
+            textColor=self.colors['text_light'],
+            alignment=TA_LEFT,
+            spaceAfter=6,
+            leading=12
+        ))
+        
+        self.styles.add(ParagraphStyle(
+            name='SidebarContact',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            fontName='Helvetica',
+            textColor=self.colors['text_light'],
+            alignment=TA_LEFT,
+            spaceAfter=4
+        ))
+        
+        # Main area styles (dark text on white background)
+        self.styles.add(ParagraphStyle(
+            name='MainHeading',
             parent=self.styles['Normal'],
             fontSize=18,
             fontName='Helvetica-Bold',
-            textColor=self.colors['primary'],
+            textColor=self.colors['text_dark'],
             alignment=TA_LEFT,
             spaceBefore=25,
-            spaceAfter=15,
-            borderWidth=1,
-            borderColor=self.colors['accent'],
-            borderPadding=5
+            spaceAfter=12
         ))
         
-        # Professional summary style
-        self.styles.add(ParagraphStyle(
-            name='Summary',
-            parent=self.styles['Normal'],
-            fontSize=12,
-            fontName='Helvetica',
-            textColor=self.colors['text'],
-            alignment=TA_JUSTIFY,
-            spaceAfter=20,
-            leading=18,
-            backColor=self.colors['light_bg'],
-            borderPadding=15
-        ))
-        
-        # Job title
         self.styles.add(ParagraphStyle(
             name='JobTitle',
             parent=self.styles['Normal'],
             fontSize=14,
             fontName='Helvetica-Bold',
-            textColor=self.colors['primary'],
+            textColor=self.colors['text_dark'],
             alignment=TA_LEFT,
-            spaceBefore=12,
-            spaceAfter=4
+            spaceBefore=10,
+            spaceAfter=3
         ))
         
-        # Company/Organization
         self.styles.add(ParagraphStyle(
             name='Organization',
             parent=self.styles['Normal'],
             fontSize=12,
             fontName='Helvetica',
-            textColor=self.colors['secondary'],
+            textColor=self.colors['accent'],
             alignment=TA_LEFT,
-            spaceAfter=4
+            spaceAfter=3
         ))
         
-        # Date range
         self.styles.add(ParagraphStyle(
             name='DateRange',
             parent=self.styles['Normal'],
             fontSize=10,
             fontName='Helvetica',
-            textColor=colors.HexColor('#6B7280'),
+            textColor=colors.HexColor('#666666'),
             alignment=TA_LEFT,
-            spaceAfter=8
+            spaceAfter=6
         ))
         
-        # Description text
         self.styles.add(ParagraphStyle(
             name='Description',
             parent=self.styles['Normal'],
             fontSize=11,
             fontName='Helvetica',
-            textColor=self.colors['text'],
+            textColor=colors.HexColor('#333333'),
             alignment=TA_LEFT,
-            spaceAfter=12,
-            leading=16,
-            leftIndent=20
-        ))
-        
-        # Skills list
-        self.styles.add(ParagraphStyle(
-            name='SkillItem',
-            parent=self.styles['Normal'],
-            fontSize=11,
-            fontName='Helvetica',
-            textColor=self.colors['text'],
-            alignment=TA_LEFT,
-            spaceAfter=6,
+            spaceAfter=8,
+            leading=14,
             leftIndent=15
         ))
 
     def generate(self, cv_data, filepath, color_scheme='blue'):
-        """Generate elegant modern CV"""
+        """Generate sidebar CV with dark left sidebar and white right main area"""
         try:
             self.setup_custom_styles(color_scheme)
             
@@ -196,83 +183,118 @@ class TemplateGenerator:
             doc = SimpleDocTemplate(
                 filepath,
                 pagesize=A4,
-                rightMargin=50,
-                leftMargin=50,
-                topMargin=40,
-                bottomMargin=40
+                rightMargin=0,
+                leftMargin=0,
+                topMargin=0,
+                bottomMargin=0
             )
             
             story = []
             
-            # Header with photo and name
-            header_content = self._create_elegant_header(cv_data)
-            story.extend(header_content)
+            # Get page dimensions
+            page_width = A4[0]
+            sidebar_width = page_width * 0.35  # 35% for sidebar
+            main_width = page_width * 0.65    # 65% for main content
             
-            # Professional summary
-            if cv_data.get('summary'):
-                story.append(Paragraph("PROFESSIONAL SUMMARY", self.styles['SectionHeading']))
-                story.append(Paragraph(cv_data['summary'], self.styles['Summary']))
+            # Create sidebar content (dark background)
+            sidebar_content = self._create_sidebar_content(cv_data)
             
-            # Work experience
-            if cv_data.get('experience'):
-                story.append(Paragraph("PROFESSIONAL EXPERIENCE", self.styles['SectionHeading']))
-                story.extend(self._create_experience_section(cv_data['experience']))
+            # Create main content (white background)
+            main_content = self._create_main_content(cv_data)
             
-            # Education
-            if cv_data.get('education'):
-                story.append(Paragraph("EDUCATION", self.styles['SectionHeading']))
-                story.extend(self._create_education_section(cv_data['education']))
+            # Create the two-column table
+            table_data = [[sidebar_content, main_content]]
             
-            # Skills
-            if cv_data.get('skills'):
-                story.append(Paragraph("CORE COMPETENCIES", self.styles['SectionHeading']))
-                story.extend(self._create_skills_section(cv_data['skills']))
+            table = Table(table_data, colWidths=[sidebar_width, main_width])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (0, 0), self.colors['sidebar']),  # Dark sidebar
+                ('BACKGROUND', (1, 0), (1, 0), self.colors['main_bg']),  # White main
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('LEFTPADDING', (0, 0), (0, 0), 20),  # Sidebar padding
+                ('RIGHTPADDING', (0, 0), (0, 0), 15),
+                ('LEFTPADDING', (1, 0), (1, 0), 25),  # Main area padding
+                ('RIGHTPADDING', (1, 0), (1, 0), 25),
+                ('TOPPADDING', (0, 0), (-1, -1), 25),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 25),
+            ]))
             
+            story.append(table)
             doc.build(story)
-            logging.info(f"Elegant modern CV generated: {filepath}")
+            
+            logging.info(f"Sidebar CV generated: {filepath}")
             return True
             
         except Exception as e:
-            logging.error(f"Error generating elegant modern CV: {str(e)}")
+            logging.error(f"Error generating sidebar CV: {str(e)}")
             return False
 
-    def _create_elegant_header(self, cv_data):
-        """Create elegant header with optional photo"""
+    def _create_sidebar_content(self, cv_data):
+        """Create dark sidebar with photo, contact info, skills"""
         content = []
         
         # Profile photo if available
         if cv_data.get('profile_photo') and os.path.exists(cv_data['profile_photo']):
             try:
-                # Create a table to center the photo
                 img = Image(cv_data['profile_photo'], width=100, height=100)
-                photo_table = Table([[img]], colWidths=[100])
-                photo_table.setStyle(TableStyle([
-                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-                ]))
-                content.append(photo_table)
+                content.append(img)
                 content.append(Spacer(1, 15))
             except:
                 pass
         
-        # Name
-        content.append(Paragraph(cv_data.get('full_name', 'Your Name'), self.styles['ElegantName']))
+        # Name and title in sidebar
+        content.append(Paragraph(cv_data.get('full_name', 'Your Name'), self.styles['SidebarName']))
+        content.append(Paragraph("PROFESSIONAL", self.styles['SidebarTitle']))
         
-        # Professional title (placeholder for now)
-        content.append(Paragraph("PROFESSIONAL CONSULTANT", self.styles['ProfessionalTitle']))
-        
-        # Contact information in a line
-        contact_parts = []
-        if cv_data.get('email'):
-            contact_parts.append(f"✉ {cv_data['email']}")
+        # Contact information
+        content.append(Paragraph("CONTACT", self.styles['SidebarHeading']))
         if cv_data.get('phone'):
-            contact_parts.append(f"📞 {cv_data['phone']}")
+            content.append(Paragraph(f"📞 {cv_data['phone']}", self.styles['SidebarContact']))
+        if cv_data.get('email'):
+            content.append(Paragraph(f"✉ {cv_data['email']}", self.styles['SidebarContact']))
         if cv_data.get('address'):
-            contact_parts.append(f"📍 {cv_data['address']}")
+            content.append(Paragraph(f"📍 {cv_data['address']}", self.styles['SidebarContact']))
         
-        if contact_parts:
-            contact_text = " • ".join(contact_parts)
-            content.append(Paragraph(contact_text, self.styles['ContactInfo']))
+        # About/Summary section
+        if cv_data.get('summary'):
+            content.append(Paragraph("ABOUT", self.styles['SidebarHeading']))
+            content.append(Paragraph(cv_data['summary'], self.styles['SidebarText']))
+        
+        # Skills section
+        if cv_data.get('skills'):
+            content.append(Paragraph("SKILLS", self.styles['SidebarHeading']))
+            try:
+                skills_data = json.loads(cv_data['skills']) if isinstance(cv_data['skills'], str) else cv_data['skills']
+                if isinstance(skills_data, list):
+                    for skill in skills_data:
+                        content.append(Paragraph(f"• {skill}", self.styles['SidebarText']))
+                else:
+                    content.append(Paragraph(str(skills_data), self.styles['SidebarText']))
+            except:
+                content.append(Paragraph(str(cv_data['skills']), self.styles['SidebarText']))
+        
+        # Languages section
+        content.append(Paragraph("LANGUAGES", self.styles['SidebarHeading']))
+        content.append(Paragraph("• English", self.styles['SidebarText']))
+        content.append(Paragraph("• French", self.styles['SidebarText']))
+        
+        return content
+
+    def _create_main_content(self, cv_data):
+        """Create white main content area with experience and education"""
+        content = []
+        
+        # Add some top spacing
+        content.append(Spacer(1, 20))
+        
+        # Work Experience
+        if cv_data.get('experience'):
+            content.append(Paragraph("PROFESSIONAL EXPERIENCE", self.styles['MainHeading']))
+            content.extend(self._create_experience_section(cv_data['experience']))
+        
+        # Education
+        if cv_data.get('education'):
+            content.append(Paragraph("EDUCATION", self.styles['MainHeading']))
+            content.extend(self._create_education_section(cv_data['education']))
         
         return content
 
@@ -315,7 +337,6 @@ class TemplateGenerator:
             content.append(Paragraph(period, self.styles['DateRange']))
             
             if description:
-                # Split description into bullet points if it contains multiple lines
                 if '\n' in description or '•' in description:
                     desc_lines = description.replace('•', '').split('\n')
                     for line in desc_lines:
@@ -376,24 +397,5 @@ class TemplateGenerator:
             
         except Exception as e:
             content.append(Paragraph(str(education_text), self.styles['Description']))
-        
-        return content
-
-    def _create_skills_section(self, skills_data):
-        """Create skills section"""
-        content = []
-        
-        try:
-            skills_list = json.loads(skills_data) if isinstance(skills_data, str) else skills_data
-            if isinstance(skills_list, list):
-                # Create a nice grid of skills
-                skill_chunks = [skills_list[i:i+3] for i in range(0, len(skills_list), 3)]
-                for chunk in skill_chunks:
-                    skill_row = " • ".join(chunk)
-                    content.append(Paragraph(f"• {skill_row}", self.styles['SkillItem']))
-            else:
-                content.append(Paragraph(str(skills_data), self.styles['Description']))
-        except:
-            content.append(Paragraph(str(skills_data), self.styles['Description']))
         
         return content
