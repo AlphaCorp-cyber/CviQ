@@ -12,23 +12,23 @@ def login():
     """Admin login page"""
     if current_user.is_authenticated:
         return redirect(url_for('admin.dashboard'))
-    
+
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         remember = bool(request.form.get('remember'))
-        
+
         if not email or not password:
             flash('Please provide both email and password.', 'error')
             return render_template('admin/login.html')
-        
+
         admin = Admin.query.filter_by(email=email).first()
-        
+
         if admin and admin.check_password(password) and admin.is_active:
             admin.last_login = datetime.utcnow()
             db.session.commit()
             login_user(admin, remember=remember)
-            
+
             # Redirect to next page or dashboard
             next_page = request.args.get('next')
             if next_page and next_page.startswith('/admin'):
@@ -36,7 +36,7 @@ def login():
             return redirect(url_for('admin.dashboard'))
         else:
             flash('Invalid email or password.', 'error')
-    
+
     return render_template('admin/login.html')
 
 @auth_bp.route('/logout')
@@ -54,41 +54,58 @@ def setup():
     if Admin.query.first():
         flash('Admin account already exists. Please log in.', 'info')
         return redirect(url_for('admin_auth.login'))
-    
+
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
-        
+
         # Validation
         if not all([name, email, password, confirm_password]):
             flash('All fields are required.', 'error')
             return render_template('admin/setup.html')
-        
+
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
             return render_template('admin/setup.html')
-        
+
         if len(password) < 6:
             flash('Password must be at least 6 characters long.', 'error')
             return render_template('admin/setup.html')
-        
+
         # Check if email already exists
         if Admin.query.filter_by(email=email).first():
             flash('Email already exists.', 'error')
             return render_template('admin/setup.html')
-        
+
         # Create new admin
         admin = Admin()
         admin.name = name
         admin.email = email
         admin.set_password(password)
-        
+
         db.session.add(admin)
         db.session.commit()
-        
+
         flash('Admin account created successfully! Please log in.', 'success')
         return redirect(url_for('admin_auth.login'))
-    
+
     return render_template('admin/setup.html')
+
+@auth_bp.route('/check-admin')
+def check_admin():
+    """Debug route to check admin accounts"""
+    admin_count = Admin.query.count()
+    admins = Admin.query.all()
+
+    result = f"Total admin accounts: {admin_count}<br><br>"
+
+    if admins:
+        result += "Existing admins:<br>"
+        for admin in admins:
+            result += f"- Email: {admin.email}, Active: {admin.is_active}, Created: {admin.created_at}<br>"
+    else:
+        result += "No admin accounts found. Visit /admin/setup to create one."
+
+    return result
