@@ -69,23 +69,23 @@ class TemplateGenerator:
         self.styles.add(ParagraphStyle(
             name='ElegantName',
             parent=self.styles['Normal'],
-            fontSize=42,
+            fontSize=36,
             fontName='Helvetica-Bold',
             textColor=self.colors['primary'],
             alignment=TA_CENTER,
-            spaceAfter=8,
-            spaceBefore=30
+            spaceAfter=6,
+            spaceBefore=20
         ))
         
         # Professional title
         self.styles.add(ParagraphStyle(
             name='ProfessionalTitle',
             parent=self.styles['Normal'],
-            fontSize=16,
+            fontSize=14,
             fontName='Helvetica',
             textColor=self.colors['secondary'],
             alignment=TA_CENTER,
-            spaceAfter=25
+            spaceAfter=20
         ))
         
         # Contact info in elegant format
