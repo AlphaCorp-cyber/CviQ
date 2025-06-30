@@ -1,37 +1,68 @@
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp CV Maker - Professional CVs via WhatsApp</title>
+    <title>WhatsApp CV Maker - Create Professional CVs in Minutes via WhatsApp</title>
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Create stunning professional CVs in minutes through WhatsApp. No apps, no forms - just chat with our AI bot and get a beautifully designed resume instantly.">
+    <meta name="keywords" content="CV maker, resume builder, WhatsApp CV, professional resume, AI CV generator">
+    <meta name="author" content="WhatsApp CV Maker">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="WhatsApp CV Maker - Professional CVs in Minutes">
+    <meta property="og:description" content="Create stunning professional CVs through WhatsApp conversation. No downloads required.">
+    <meta property="og:type" content="website">
     
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            --primary-color: #25d366;
+            --primary-dark: #1da851;
+            --secondary-color: #128c7e;
+            --accent-color: #dcf8c6;
+            --text-light: #f8f9fa;
+            --text-muted: #adb5bd;
+            --dark-bg: #0f1419;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            --gradient-hero: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --gradient-accent: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
         
+        /* Hero Section */
         .hero-section {
-            background: var(--primary-gradient);
-            background-attachment: fixed;
             min-height: 100vh;
+            background: var(--gradient-hero);
+            position: relative;
             display: flex;
             align-items: center;
-            position: relative;
             overflow: hidden;
         }
         
@@ -42,34 +73,39 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: radial-gradient(circle at 20% 80%, rgba(37, 211, 102, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+            animation: gradientShift 20s ease-in-out infinite;
         }
         
-        .floating-elements {
+        .hero-particles {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 1;
         }
         
-        .floating-icon {
+        .particle {
             position: absolute;
-            font-size: 2rem;
-            color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
         
-        .floating-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .floating-icon:nth-child(2) { top: 60%; left: 80%; animation-delay: 2s; }
-        .floating-icon:nth-child(3) { top: 80%; left: 20%; animation-delay: 4s; }
-        .floating-icon:nth-child(4) { top: 30%; left: 70%; animation-delay: 1s; }
-        .floating-icon:nth-child(5) { top: 70%; left: 50%; animation-delay: 3s; }
+        .particle:nth-child(1) { width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; top: 80%; left: 20%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; top: 30%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; top: 70%; left: 50%; animation-delay: 3s; }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         
         .hero-content {
@@ -77,272 +113,632 @@
             z-index: 2;
         }
         
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            transition: all 0.3s ease;
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #25d366 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
         }
         
-        .step-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        .cta-button {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 18px 40px;
+            border-radius: 50px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
         
-        .step-card::before {
+        .cta-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
         
-        .step-card:hover::before {
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            color: white;
+        }
+        
+        .cta-button:hover::before {
             left: 100%;
         }
         
-        .step-number {
-            background: var(--secondary-gradient);
-            width: 60px;
-            height: 60px;
+        .pulse-ring {
+            position: absolute;
+            border: 3px solid var(--primary-color);
+            border-radius: 50px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+        
+        /* Stats Section */
+        .stats-container {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        /* WhatsApp Demo */
+        .whatsapp-demo {
+            background: linear-gradient(145deg, #25d366, #1da851);
+            border-radius: 25px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .whatsapp-demo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin: 0 auto 1rem;
+            margin-right: 1rem;
         }
         
-        .whatsapp-demo {
-            background: #25d366;
+        .chat-info h5 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .chat-info small {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .chat-bubble {
+            background: white;
+            color: #333;
+            padding: 12px 16px;
+            border-radius: 18px 18px 18px 4px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        .chat-bubble.user {
+            background: #dcf8c6;
+            border-radius: 18px 18px 4px 18px;
+            margin-left: 3rem;
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 6rem 0;
+            background: linear-gradient(45deg, var(--dark-bg) 0%, #1a1a2e 100%);
+        }
+        
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
             border-radius: 20px;
-            padding: 1rem;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
         
-        .whatsapp-demo::before {
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .feature-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .feature-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            padding: 6rem 0;
+            background: var(--dark-bg);
+        }
+        
+        .step-container {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            width: 2px;
+            height: calc(100% - 80px);
+            background: linear-gradient(to bottom, var(--primary-color), transparent);
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .step-line {
+                display: block;
+            }
+        }
+        
+        .step-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+            color: white;
+        }
+        
+        .step-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .step-description {
+            color: var(--text-muted);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 0;
+            background: linear-gradient(45deg, #1a1a2e 0%, var(--dark-bg) 100%);
+        }
+        
+        .testimonial-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+        }
+        
+        .quote-icon {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .author-info h6 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .author-info small {
+            color: var(--text-muted);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--gradient-hero);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            opacity: 0.3;
+            background: radial-gradient(circle at center, rgba(37, 211, 102, 0.1) 0%, transparent 70%);
         }
         
-        .btn-whatsapp {
-            background: #25d366;
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 50px;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+        .cta-content {
             position: relative;
-            overflow: hidden;
+            z-index: 2;
         }
         
-        .btn-whatsapp::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            transform: translate(-50%, -50%);
+        .cta-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
         
-        .btn-whatsapp:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn-whatsapp:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-        }
-        
-        .btn-admin {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 50px;
-            padding: 12px 25px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-admin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .stats-counter {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: var(--success-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .section-title {
-            position: relative;
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
             margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--secondary-gradient);
-            border-radius: 2px;
-        }
-        
-        .testimonial-card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-        
-        .testimonial-card::before {
-            content: '"';
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            font-size: 4rem;
-            color: rgba(255, 255, 255, 0.2);
-            font-family: serif;
-        }
-        
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
-        
+        /* Footer */
         .footer {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            background: var(--dark-bg);
+            padding: 3rem 0 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        .footer-content {
+            margin-bottom: 2rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-right: 2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .hero-section h1 { font-size: 2.5rem; }
-            .stats-counter { font-size: 2rem; }
+            .hero-content {
+                text-align: center;
+            }
+            
+            .stats-container {
+                margin-top: 2rem;
+            }
+            
+            .feature-card,
+            .step-card {
+                margin-bottom: 2rem;
+            }
+            
+            .whatsapp-demo {
+                margin-top: 3rem;
+            }
+            
+            .footer-links a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+        
+        /* Scroll Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="floating-elements">
-            <i class="floating-icon fas fa-file-pdf"></i>
-            <i class="floating-icon fab fa-whatsapp"></i>
-            <i class="floating-icon fas fa-mobile-alt"></i>
-            <i class="floating-icon fas fa-crown"></i>
-            <i class="floating-icon fas fa-rocket"></i>
+        <div class="hero-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
         
         <div class="container hero-content">
             <div class="row align-items-center min-vh-100">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <h1 class="display-3 fw-bold text-white mb-4">
-                        Create Professional CVs via 
-                        <span style="background: var(--secondary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                            WhatsApp
-                        </span>
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="800">
+                    <h1 class="hero-title">
+                        Create Stunning CVs in 
+                        <span style="color: var(--primary-color);">Minutes</span>
                     </h1>
-                    <p class="lead text-light mb-4">
-                        No apps to download, no complex forms to fill. Just chat with our AI bot on WhatsApp 
-                        and get a professionally designed CV in minutes!
+                    <p class="hero-subtitle">
+                        No apps to download. No complex forms. Just chat with our AI-powered WhatsApp bot and receive a professionally designed CV that gets you hired.
                     </p>
                     
-                    <div class="d-flex flex-wrap gap-3 mb-4">
-                        <button class="btn btn-whatsapp btn-lg pulse-animation" onclick="startWhatsApp()">
-                            <i class="fab fa-whatsapp me-2"></i>
-                            Start Creating CV
-                        </button>
-                        <a href="{{ url_for('admin_auth.login') }}" class="btn btn-admin btn-lg">
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+                        <a href="#" class="cta-button position-relative" onclick="startWhatsApp()">
+                            <div class="pulse-ring"></div>
+                            <i class="fab fa-whatsapp"></i>
+                            Start Creating My CV
+                        </a>
+                        <a href="{{ url_for('admin_auth.login') }}" class="btn btn-outline-light btn-lg">
                             <i class="fas fa-cog me-2"></i>
                             Admin Panel
                         </a>
                     </div>
                     
-                    <div class="row text-center mt-5">
-                        <div class="col-4">
-                            <div class="stats-counter" data-target="1000">0</div>
-                            <small class="text-light">CVs Created</small>
-                        </div>
-                        <div class="col-4">
-                            <div class="stats-counter" data-target="50">0</div>
-                            <small class="text-light">Templates</small>
-                        </div>
-                        <div class="col-4">
-                            <div class="stats-counter" data-target="95">0</div>
-                            <small class="text-light">Success Rate</small>
+                    <div class="stats-container" data-aos="fade-up" data-aos-delay="300">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <span class="stat-number" data-target="5000">0</span>
+                                    <div class="stat-label">CVs Created</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <span class="stat-number" data-target="50">0</span>
+                                    <div class="stat-label">Templates</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <span class="stat-number" data-target="98">0</span>
+                                    <div class="stat-label">Success Rate</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-6" data-aos="fade-left">
+                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
                     <div class="whatsapp-demo">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="fab fa-whatsapp fa-2x text-white me-3"></i>
-                            <div>
-                                <h5 class="text-white mb-0">CV Maker Bot</h5>
-                                <small class="text-light">Online now</small>
+                        <div class="chat-header">
+                            <div class="chat-avatar">
+                                <i class="fab fa-whatsapp fa-2x" style="color: var(--primary-color);"></i>
+                            </div>
+                            <div class="chat-info">
+                                <h5>CV Maker Bot</h5>
+                                <small><i class="fas fa-circle text-success me-1"></i>Online now</small>
                             </div>
                         </div>
                         
-                        <div class="bg-white rounded p-3 mb-2">
-                            <small class="text-dark">👋 Hi! I'm your CV assistant. What's your name?</small>
+                        <div class="chat-bubble">
+                            <small>👋 Hi! I'm your AI CV assistant. Let's create your perfect resume in just 5 minutes!</small>
                         </div>
                         
-                        <div class="bg-light rounded p-3 mb-2 ms-5">
-                            <small class="text-dark">John Doe</small>
+                        <div class="chat-bubble user">
+                            <small>Hi! I need a new CV</small>
                         </div>
                         
-                        <div class="bg-white rounded p-3 mb-2">
-                            <small class="text-dark">Great! What's your email address?</small>
+                        <div class="chat-bubble">
+                            <small>Perfect! What's your name? ✨</small>
                         </div>
                         
-                        <div class="bg-light rounded p-3 mb-2 ms-5">
-                            <small class="text-dark">john@example.com</small>
+                        <div class="chat-bubble user">
+                            <small>John Smith</small>
                         </div>
                         
-                        <div class="bg-white rounded p-3">
-                            <small class="text-dark">Perfect! Let's continue building your professional CV... 📄</small>
+                        <div class="chat-bubble">
+                            <small>Great! Now tell me about your dream job, John. I'll help you create a CV that gets you noticed! 🚀</small>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="loading me-2"></div>
+                            <small style="color: rgba(255, 255, 255, 0.8);">AI is typing...</small>
                         </div>
                     </div>
                 </div>
@@ -351,45 +747,84 @@
     </section>
     
     <!-- Features Section -->
-    <section class="py-5" style="background: rgba(0, 0, 0, 0.2);">
+    <section class="features-section">
         <div class="container">
-            <h2 class="text-center text-white section-title" data-aos="fade-up">
-                Why Choose WhatsApp CV Maker?
-            </h2>
+            <div data-aos="fade-up">
+                <h2 class="section-title">Why Choose Our AI CV Maker?</h2>
+                <p class="section-subtitle">
+                    Revolutionary technology meets professional design to create CVs that get results
+                </p>
+            </div>
             
             <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card p-4 h-100">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-mobile-alt fa-3x" style="color: #25d366;"></i>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
                         </div>
-                        <h4 class="text-white text-center mb-3">No App Required</h4>
-                        <p class="text-light text-center">
-                            Use WhatsApp directly - no need to download any additional apps or software.
+                        <h3 class="feature-title">No App Required</h3>
+                        <p class="feature-description">
+                            Works directly through WhatsApp - the app you already use daily. No downloads, no installations, no hassle.
                         </p>
                     </div>
                 </div>
                 
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card p-4 h-100">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-clock fa-3x" style="color: #f093fb;"></i>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
                         </div>
-                        <h4 class="text-white text-center mb-3">Quick & Easy</h4>
-                        <p class="text-light text-center">
-                            Create professional CVs in under 5 minutes through simple conversation.
+                        <h3 class="feature-title">AI-Powered Intelligence</h3>
+                        <p class="feature-description">
+                            Our advanced AI understands your industry and optimizes your CV content for maximum impact with recruiters.
                         </p>
                     </div>
                 </div>
                 
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-card p-4 h-100">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-paint-brush fa-3x" style="color: #4facfe;"></i>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
                         </div>
-                        <h4 class="text-white text-center mb-3">Professional Templates</h4>
-                        <p class="text-light text-center">
-                            Choose from multiple professionally designed templates for different industries.
+                        <h3 class="feature-title">Lightning Fast</h3>
+                        <p class="feature-description">
+                            Get your professional CV in under 5 minutes. Perfect for last-minute applications and urgent deadlines.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3 class="feature-title">Designer Templates</h3>
+                        <p class="feature-description">
+                            Choose from 50+ professionally designed templates created by industry experts for every career level.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">100% Secure</h3>
+                        <p class="feature-description">
+                            Your personal information is encrypted and protected. We never store or share your data without permission.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="feature-title">Global Standards</h3>
+                        <p class="feature-description">
+                            Templates optimized for international standards and ATS systems used by top companies worldwide.
                         </p>
                     </div>
                 </div>
@@ -398,89 +833,132 @@
     </section>
     
     <!-- How It Works Section -->
-    <section class="py-5">
+    <section class="how-it-works">
         <div class="container">
-            <h2 class="text-center text-white section-title" data-aos="fade-up">
-                How It Works
-            </h2>
+            <div data-aos="fade-up">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">
+                    Four simple steps to your dream job
+                </p>
+            </div>
             
             <div class="row g-4">
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="step-card p-4 text-center h-100">
-                        <div class="step-number">1</div>
-                        <h5 class="text-white mb-3">Start Chat</h5>
-                        <p class="text-light">
-                            Send a message to our WhatsApp bot to begin the CV creation process.
-                        </p>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-container">
+                        <div class="step-line"></div>
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <h4 class="step-title">Start Conversation</h4>
+                            <p class="step-description">
+                                Send "Hi" to our WhatsApp bot to begin your professional CV creation journey.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
-                    <div class="step-card p-4 text-center h-100">
-                        <div class="step-number">2</div>
-                        <h5 class="text-white mb-3">Share Details</h5>
-                        <p class="text-light">
-                            Answer simple questions about your experience, skills, and education.
-                        </p>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-container">
+                        <div class="step-line"></div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <h4 class="step-title">Share Your Story</h4>
+                            <p class="step-description">
+                                Answer simple questions about your experience, skills, and career goals through natural conversation.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
-                    <div class="step-card p-4 text-center h-100">
-                        <div class="step-number">3</div>
-                        <h5 class="text-white mb-3">Choose Template</h5>
-                        <p class="text-light">
-                            Select from our collection of professional CV templates.
-                        </p>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-container">
+                        <div class="step-line"></div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <h4 class="step-title">AI Magic</h4>
+                            <p class="step-description">
+                                Our AI analyzes your information and selects the perfect template and formatting for your industry.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
-                    <div class="step-card p-4 text-center h-100">
-                        <div class="step-number">4</div>
-                        <h5 class="text-white mb-3">Download CV</h5>
-                        <p class="text-light">
-                            Receive your professionally formatted CV as a PDF instantly.
-                        </p>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-container">
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <h4 class="step-title">Get Hired</h4>
+                            <p class="step-description">
+                                Download your professionally formatted PDF CV and start applying to your dream jobs immediately.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- Pricing Section -->
-    <section class="py-5" style="background: rgba(0, 0, 0, 0.2);">
+    <!-- Testimonials Section -->
+    <section class="testimonials">
         <div class="container">
-            <h2 class="text-center text-white section-title" data-aos="fade-up">
-                Simple Pricing
-            </h2>
+            <div data-aos="fade-up">
+                <h2 class="section-title">Success Stories</h2>
+                <p class="section-subtitle">
+                    Join thousands who landed their dream jobs with our CV maker
+                </p>
+            </div>
             
-            <div class="row justify-content-center g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card p-4 text-center h-100">
-                        <h4 class="text-white mb-3">Free</h4>
-                        <div class="stats-counter mb-3">$0</div>
-                        <ul class="text-light list-unstyled">
-                            <li class="mb-2">✓ Basic templates</li>
-                            <li class="mb-2">✓ Standard formatting</li>
-                            <li class="mb-2">✓ PDF download</li>
-                            <li class="mb-2">✓ WhatsApp support</li>
-                        </ul>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="testimonial-card">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "I got my dream job within a week of using this CV maker! The AI understood exactly what recruiters were looking for in my industry."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">SJ</div>
+                            <div class="author-info">
+                                <h6>Sarah Johnson</h6>
+                                <small>Software Engineer at Google</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card p-4 text-center h-100" style="border: 2px solid #f093fb;">
-                        <div class="badge bg-primary mb-3">Popular</div>
-                        <h4 class="text-white mb-3">Premium</h4>
-                        <div class="stats-counter mb-3">$5</div>
-                        <ul class="text-light list-unstyled">
-                            <li class="mb-2">✓ All free features</li>
-                            <li class="mb-2">✓ Premium templates</li>
-                            <li class="mb-2">✓ Advanced formatting</li>
-                            <li class="mb-2">✓ Priority support</li>
-                            <li class="mb-2">✓ Multiple downloads</li>
-                        </ul>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "So convenient! I created my CV during my lunch break and had multiple interview calls by the end of the week. Amazing results!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MC</div>
+                            <div class="author-info">
+                                <h6>Michael Chen</h6>
+                                <small>Marketing Director</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-card">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "The templates are gorgeous and the process is incredibly intuitive. Finally, a CV maker that actually works through WhatsApp!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">EM</div>
+                            <div class="author-info">
+                                <h6>Emily Rodriguez</h6>
+                                <small>UX Designer</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -488,59 +966,81 @@
     </section>
     
     <!-- CTA Section -->
-    <section class="py-5">
-        <div class="container text-center">
-            <h2 class="text-white mb-4" data-aos="fade-up">
-                Ready to Create Your Professional CV?
-            </h2>
-            <p class="lead text-light mb-4" data-aos="fade-up" data-aos-delay="100">
-                Join thousands of professionals who have already created their CVs with us.
-            </p>
-            <button class="btn btn-whatsapp btn-lg pulse-animation" onclick="startWhatsApp()" data-aos="fade-up" data-aos-delay="200">
-                <i class="fab fa-whatsapp me-2"></i>
-                Get Started Now - It's Free!
-            </button>
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content" data-aos="fade-up">
+                <h2 class="cta-title">Ready to Land Your Dream Job?</h2>
+                <p class="cta-subtitle">
+                    Join over 5,000 professionals who have successfully created their CVs with our AI-powered WhatsApp bot. Start your career transformation today!
+                </p>
+                <a href="#" class="cta-button position-relative" onclick="startWhatsApp()">
+                    <div class="pulse-ring"></div>
+                    <i class="fab fa-whatsapp"></i>
+                    Create My Professional CV Now
+                </a>
+                <div class="mt-4">
+                    <small style="color: rgba(255, 255, 255, 0.7);">
+                        <i class="fas fa-clock me-1"></i>
+                        Average creation time: 4 minutes
+                        <span class="mx-3">|</span>
+                        <i class="fas fa-shield-check me-1"></i>
+                        100% Free to start
+                    </small>
+                </div>
+            </div>
         </div>
     </section>
     
     <!-- Footer -->
-    <footer class="footer py-4">
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="text-white">WhatsApp CV Maker</h5>
-                    <p class="text-light">Creating professional CVs through WhatsApp conversation.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="{{ url_for('admin_auth.login') }}" class="text-light text-decoration-none me-3">
-                        <i class="fas fa-cog me-1"></i>Admin
-                    </a>
-                    <a href="#" class="text-light text-decoration-none">
-                        <i class="fas fa-question-circle me-1"></i>Help
-                    </a>
+            <div class="footer-content">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="footer-logo">WhatsApp CV Maker</div>
+                        <p style="color: var(--text-muted); max-width: 400px;">
+                            Empowering careers through AI-powered CV creation. Create professional resumes in minutes through simple WhatsApp conversations.
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="footer-links text-lg-end">
+                            <a href="{{ url_for('admin_auth.login') }}">
+                                <i class="fas fa-cog me-1"></i>Admin Panel
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-question-circle me-1"></i>Help & Support
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-shield-alt me-1"></i>Privacy Policy
+                            </a>
+                            <a href="#">
+                                <i class="fas fa-file-contract me-1"></i>Terms of Service
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr style="border-color: rgba(255, 255, 255, 0.2);">
-            <div class="text-center text-light">
-                <small>&copy; {{ current_year }} WhatsApp CV Maker. All rights reserved.</small>
+            <div class="footer-bottom">
+                <small>&copy; {{ current_year }} WhatsApp CV Maker. All rights reserved. Built with ❤️ for job seekers worldwide.</small>
             </div>
         </div>
     </footer>
     
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     
     <script>
         // Initialize AOS
         AOS.init({
             duration: 800,
-            once: true
+            once: true,
+            offset: 100
         });
         
         // Counter animation
         function animateCounters() {
-            const counters = document.querySelectorAll('.stats-counter');
+            const counters = document.querySelectorAll('.stat-number');
             counters.forEach(counter => {
                 const target = parseInt(counter.getAttribute('data-target'));
                 const duration = 2000;
@@ -553,12 +1053,12 @@
                         current = target;
                         clearInterval(timer);
                     }
-                    counter.textContent = Math.floor(current);
+                    counter.textContent = Math.floor(current) + (target === 98 ? '%' : '+');
                 }, 16);
             });
         }
         
-        // Trigger counter animation when hero section is visible
+        // Trigger counter animation when stats section is visible
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -566,14 +1066,97 @@
                     observer.unobserve(entry.target);
                 }
             });
-        });
+        }, { threshold: 0.5 });
         
-        observer.observe(document.querySelector('.hero-section'));
+        const statsContainer = document.querySelector('.stats-container');
+        if (statsContainer) {
+            observer.observe(statsContainer);
+        }
         
         // WhatsApp integration
         function startWhatsApp() {
-            // In a real implementation, this would open WhatsApp with your bot number
-            alert('🚀 WhatsApp CV Maker Bot\n\n📱 To get started:\n1. Add our WhatsApp number\n2. Send "Hi" to begin\n3. Follow the prompts to create your CV\n\n💡 Make sure to configure your Twilio credentials in the admin panel first!');
+            // Show attractive modal with instructions
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 20px;
+                    padding: 3rem;
+                    max-width: 500px;
+                    margin: 1rem;
+                    text-align: center;
+                    color: #333;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                ">
+                    <div style="
+                        width: 80px;
+                        height: 80px;
+                        background: linear-gradient(135deg, #25d366, #128c7e);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto 1.5rem;
+                    ">
+                        <i class="fab fa-whatsapp" style="font-size: 2.5rem; color: white;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem; color: #333;">🚀 Ready to Create Your CV?</h3>
+                    <p style="margin-bottom: 1.5rem; color: #666;">
+                        To get started with your professional CV:
+                    </p>
+                    <div style="text-align: left; margin-bottom: 2rem;">
+                        <div style="margin-bottom: 0.5rem;">📱 1. Save our WhatsApp number</div>
+                        <div style="margin-bottom: 0.5rem;">💬 2. Send "Hi" to begin</div>
+                        <div style="margin-bottom: 0.5rem;">✨ 3. Follow the prompts</div>
+                        <div>📄 4. Get your CV in 5 minutes!</div>
+                    </div>
+                    <div style="
+                        background: #f8f9fa;
+                        padding: 1rem;
+                        border-radius: 10px;
+                        margin-bottom: 1.5rem;
+                        border: 2px dashed #25d366;
+                    ">
+                        <strong style="color: #25d366;">⚙️ Admin Note:</strong><br>
+                        <small style="color: #666;">Configure your Twilio WhatsApp credentials in the admin panel first!</small>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(135deg, #25d366, #128c7e);
+                        color: white;
+                        border: none;
+                        padding: 12px 30px;
+                        border-radius: 25px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s;
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        Got it! Let's Go 🚀
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
         }
         
         // Smooth scrolling for anchor links
@@ -582,9 +1165,69 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+                    target.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
+        });
+        
+        // Add scroll effect to navbar (if you add one later)
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Add fade-in effect to elements when they come into view
+            const elements = document.querySelectorAll('.fade-in-up');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+            
+            lastScrollTop = scrollTop;
+        });
+        
+        // Parallax effect for hero particles
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const particles = document.querySelectorAll('.particle');
+            
+            particles.forEach((particle, index) => {
+                const speed = (index + 1) * 0.5;
+                particle.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+        
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+        
+        // Initialize typing effect when page loads
+        window.addEventListener('load', () => {
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const originalText = heroTitle.textContent;
+                setTimeout(() => {
+                    typeWriter(heroTitle, originalText, 50);
+                }, 1000);
+            }
         });
     </script>
 </body>
