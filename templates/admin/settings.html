@@ -126,21 +126,39 @@
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>TWILIO_ACCOUNT_SID:</span>
+                            {% if config.TWILIO_ACCOUNT_SID or config.get('TWILIO_ACCOUNT_SID') %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Set
+                            </span>
+                            {% else %}
                             <span class="badge bg-warning">
                                 <i class="fas fa-exclamation-triangle me-1"></i>Missing
                             </span>
+                            {% endif %}
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>TWILIO_AUTH_TOKEN:</span>
+                            {% if config.TWILIO_AUTH_TOKEN or config.get('TWILIO_AUTH_TOKEN') %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Set
+                            </span>
+                            {% else %}
                             <span class="badge bg-warning">
                                 <i class="fas fa-exclamation-triangle me-1"></i>Missing
                             </span>
+                            {% endif %}
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>TWILIO_PHONE_NUMBER:</span>
+                            {% if config.TWILIO_PHONE_NUMBER or config.get('TWILIO_PHONE_NUMBER') %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Set
+                            </span>
+                            {% else %}
                             <span class="badge bg-warning">
                                 <i class="fas fa-exclamation-triangle me-1"></i>Missing
                             </span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
