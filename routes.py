@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template
 from twilio.twiml.messaging_response import MessagingResponse
 import logging
+from datetime import datetime
 
 from whatsapp_bot import WhatsAppBot
 
@@ -9,12 +10,7 @@ bot = WhatsAppBot()
 
 @main_bp.route('/')
 def index():
-    return """
-    <h1>WhatsApp CV Maker Bot</h1>
-    <p>This is the WhatsApp CV Maker Bot backend.</p>
-    <p>Send a message to the bot on WhatsApp to get started!</p>
-    <a href="/admin">Admin Panel</a>
-    """
+    return render_template('landing.html', current_year=datetime.now().year)
 
 @main_bp.route('/webhook', methods=['POST'])
 def webhook():

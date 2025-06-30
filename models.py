@@ -2,7 +2,31 @@ from datetime import datetime
 from app import db
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
+# Admin authentication model
+class Admin(UserMixin, db.Model):
+    __tablename__ = 'admins'
+    
+    id = Column(Integer, primary_key=True)
+    email = Column(String(120), unique=True, nullable=False)
+    password_hash = Column(String(256), nullable=False)
+    name = Column(String(100), nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_login = Column(DateTime)
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def __repr__(self):
+        return f'<Admin {self.email}>'
+
+# WhatsApp users model
 class User(db.Model):
     __tablename__ = 'users'
     

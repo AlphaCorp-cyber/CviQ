@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 from app import db
 from models import User, Template, CV, Transaction
@@ -7,6 +8,7 @@ import json
 admin_bp = Blueprint('admin', __name__)
 
 @admin_bp.route('/')
+@login_required
 def dashboard():
     """Admin dashboard with key metrics"""
     # Get key metrics
@@ -42,6 +44,7 @@ def dashboard():
                          template_stats=template_stats)
 
 @admin_bp.route('/users')
+@login_required
 def users():
     """User management page"""
     page = request.args.get('page', 1, type=int)
