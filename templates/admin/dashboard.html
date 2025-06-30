@@ -136,7 +136,7 @@
                                 <tr>
                                     <td>{{ cv.full_name }}</td>
                                     <td>{{ cv.template.name if cv.template else 'N/A' }}</td>
-                                    <td>{{ cv.created_at.strftime('%m/%d/%Y') }}</td>
+                                    <td>{{ cv.created_at.strftime('%m/%d/%Y') if cv.created_at else 'N/A' }}</td>
                                     <td>
                                         {% if cv.is_premium %}
                                             <span class="badge bg-warning">Premium</span>

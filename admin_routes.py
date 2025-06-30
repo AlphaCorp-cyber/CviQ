@@ -24,10 +24,13 @@ def dashboard():
     total_revenue = sum(t.amount for t in completed_transactions)
     
     # Template usage stats
-    template_stats = db.session.query(
+    template_stats_query = db.session.query(
         Template.name,
         db.func.count(CV.id).label('usage_count')
     ).join(CV).group_by(Template.id, Template.name).all()
+    
+    # Convert to serializable format
+    template_stats = [[stat.name, stat.usage_count] for stat in template_stats_query]
     
     return render_template('admin/dashboard.html',
                          total_users=total_users,
@@ -78,13 +81,11 @@ def add_template():
         template_file = request.form.get('template_file')
         
         if name and template_file:
-            template = Template(
-                name=name,
-                description=description,
-                is_premium=is_premium,
-                template_file=template_file,
-                created_at=datetime.utcnow()
-            )
+            template = Template()
+            template.name = name
+            template.description = description
+            template.is_premium = is_premium
+            template.template_file = template_file
             
             db.session.add(template)
             db.session.commit()

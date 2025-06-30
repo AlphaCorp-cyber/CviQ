@@ -330,22 +330,20 @@ Type '1' and send photo, or '2' to skip."""
                 
                 if cv_file_path:
                     # Save CV to database
-                    new_cv = CV(
-                        user_id=user.id,
-                        template_id=selected_template.id,
-                        full_name=cv_data['full_name'],
-                        email=cv_data['email'],
-                        phone=cv_data['phone'],
-                        address=cv_data['address'],
-                        summary=cv_data['summary'],
-                        experience=json.dumps(cv_data['experience']),
-                        education=json.dumps(cv_data['education']),
-                        skills=json.dumps(cv_data['skills']),
-                        profile_photo=cv_data.get('profile_photo'),
-                        file_path=cv_file_path,
-                        is_premium=selected_template.is_premium,
-                        created_at=datetime.utcnow()
-                    )
+                    new_cv = CV()
+                    new_cv.user_id = user.id
+                    new_cv.template_id = selected_template.id
+                    new_cv.full_name = cv_data['full_name']
+                    new_cv.email = cv_data['email']
+                    new_cv.phone = cv_data['phone']
+                    new_cv.address = cv_data['address']
+                    new_cv.summary = cv_data['summary']
+                    new_cv.experience = json.dumps(cv_data['experience'])
+                    new_cv.education = json.dumps(cv_data['education'])
+                    new_cv.skills = json.dumps(cv_data['skills'])
+                    new_cv.profile_photo = cv_data.get('profile_photo')
+                    new_cv.file_path = cv_file_path
+                    new_cv.is_premium = selected_template.is_premium
                     
                     db.session.add(new_cv)
                     db.session.commit()
@@ -479,16 +477,14 @@ Type '1' and send photo, or '2' to skip."""
                 package = packages[choice]
                 
                 # Create transaction record
-                transaction = Transaction(
-                    user_id=user.id,
-                    amount=package["price"],
-                    currency="USD",
-                    payment_method="EcoCash",
-                    status="pending",
-                    product_type=package["type"],
-                    description=package["name"],
-                    created_at=datetime.utcnow()
-                )
+                transaction = Transaction()
+                transaction.user_id = user.id
+                transaction.amount = package["price"]
+                transaction.currency = "USD"
+                transaction.payment_method = "EcoCash"
+                transaction.status = "pending"
+                transaction.product_type = package["type"]
+                transaction.description = package["name"]
                 
                 db.session.add(transaction)
                 db.session.commit()
