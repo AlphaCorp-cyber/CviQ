@@ -100,6 +100,23 @@ def add_template():
     
     return render_template('admin/add_template.html')
 
+@admin_bp.route('/templates/<int:template_id>/edit', methods=['GET', 'POST'])
+def edit_template(template_id):
+    """Edit template details"""
+    template = Template.query.get_or_404(template_id)
+    
+    if request.method == 'POST':
+        template.name = request.form.get('name')
+        template.description = request.form.get('description')
+        template.is_premium = request.form.get('is_premium') == 'on'
+        template.template_file = request.form.get('template_file')
+        
+        db.session.commit()
+        flash(f'Template {template.name} updated successfully!', 'success')
+        return redirect(url_for('admin.templates'))
+    
+    return render_template('admin/edit_template.html', template=template)
+
 @admin_bp.route('/templates/<int:template_id>/toggle')
 def toggle_template(template_id):
     """Toggle template active status"""
@@ -109,6 +126,18 @@ def toggle_template(template_id):
     
     status = 'activated' if template.is_active else 'deactivated'
     flash(f'Template {template.name} has been {status}!', 'success')
+    
+    return redirect(url_for('admin.templates'))
+
+@admin_bp.route('/templates/<int:template_id>/toggle-premium')
+def toggle_premium(template_id):
+    """Toggle template premium status"""
+    template = Template.query.get_or_404(template_id)
+    template.is_premium = not template.is_premium
+    db.session.commit()
+    
+    status = 'premium' if template.is_premium else 'free'
+    flash(f'Template {template.name} is now {status}!', 'success')
     
     return redirect(url_for('admin.templates'))
 

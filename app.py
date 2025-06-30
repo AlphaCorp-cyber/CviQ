@@ -79,10 +79,52 @@ with app.app_context():
                 template_file="template2.py"
             ),
             Template(
-                name="Creative Designer",
-                description="Stylish template for creative professionals",
+                name="Creative Modern",
+                description="Colorful and modern design for creative professionals",
                 is_premium=True,
-                template_file="template1.py"
+                template_file="template3.py"
+            ),
+            Template(
+                name="Minimalist",
+                description="Clean and simple design focusing on content",
+                is_premium=False,
+                template_file="template4.py"
+            ),
+            Template(
+                name="Technical Professional",
+                description="Designed for IT and technical professionals",
+                is_premium=True,
+                template_file="template5.py"
+            ),
+            Template(
+                name="Sales Professional",
+                description="Designed for sales and business development professionals",
+                is_premium=True,
+                template_file="template6.py"
+            ),
+            Template(
+                name="Academic",
+                description="Designed for researchers, professors, and academic professionals",
+                is_premium=False,
+                template_file="template7.py"
+            ),
+            Template(
+                name="Healthcare Professional",
+                description="Designed for doctors, nurses, and healthcare professionals",
+                is_premium=True,
+                template_file="template8.py"
+            ),
+            Template(
+                name="Finance Professional",
+                description="Designed for banking, finance, and investment professionals",
+                is_premium=True,
+                template_file="template9.py"
+            ),
+            Template(
+                name="Creative Arts",
+                description="Designed for artists, designers, and creative professionals",
+                is_premium=True,
+                template_file="template10.py"
             )
         ]
         
