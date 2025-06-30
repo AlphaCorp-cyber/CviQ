@@ -112,6 +112,91 @@ def toggle_template(template_id):
     
     return redirect(url_for('admin.templates'))
 
+@admin_bp.route('/templates/<int:template_id>/preview')
+def preview_template(template_id):
+    """Generate a preview CV for the template"""
+    template = Template.query.get_or_404(template_id)
+    
+    # Sample CV data for preview
+    sample_cv_data = {
+        'full_name': 'John Smith',
+        'email': 'john.smith@email.com',
+        'phone': '+1 (555) 123-4567',
+        'address': '123 Main Street, City, State 12345',
+        'summary': 'Experienced professional with over 10 years in the industry. Proven track record of delivering high-quality results and leading successful teams. Passionate about innovation and continuous learning.',
+        'experience': [
+            'Senior Manager at Tech Corp\nJanuary 2020 - Present\nLead a team of 15 professionals in developing innovative solutions. Increased team productivity by 35% and reduced project delivery time by 20%. Managed multiple high-priority projects with budgets exceeding $2M.',
+            'Project Manager at StartUp Inc\nMarch 2017 - December 2019\nOversaw product development lifecycle from conception to launch. Collaborated with cross-functional teams to deliver 5 successful product launches. Implemented agile methodologies that improved team efficiency by 25%.',
+            'Business Analyst at Global Solutions\nJune 2014 - February 2017\nAnalyzed business requirements and translated them into technical specifications. Worked closely with stakeholders to identify process improvements. Contributed to a 15% increase in operational efficiency.'
+        ],
+        'education': [
+            'Master of Business Administration\nHarvard Business School\n2014\nConcentration in Strategy and Operations',
+            'Bachelor of Science in Computer Science\nStanford University\n2012\nGraduated Magna Cum Laude, GPA: 3.8/4.0'
+        ],
+        'skills': [
+            'Project Management',
+            'Strategic Planning',
+            'Team Leadership',
+            'Data Analysis',
+            'Process Improvement',
+            'Agile Methodologies',
+            'Budget Management',
+            'Stakeholder Relations',
+            'Risk Assessment',
+            'Performance Optimization'
+        ]
+    }
+    
+    try:
+        from pdf_generator import PDFGenerator
+        import tempfile
+        import os
+        from flask import send_file
+        
+        # Create temporary file for preview
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
+            temp_filepath = tmp_file.name
+        
+        # Generate preview PDF
+        pdf_gen = PDFGenerator()
+        
+        # Get template generator
+        import cv_templates
+        template_module = getattr(cv_templates, template.template_file.replace('.py', ''))
+        generator_class = getattr(template_module, 'TemplateGenerator')
+        
+        # Generate PDF
+        generator = generator_class()
+        success = generator.generate(sample_cv_data, temp_filepath)
+        
+        if success:
+            def cleanup_file():
+                try:
+                    os.unlink(temp_filepath)
+                except:
+                    pass
+            
+            # Schedule cleanup after response
+            from flask import after_this_request
+            @after_this_request
+            def remove_file(response):
+                cleanup_file()
+                return response
+            
+            return send_file(
+                temp_filepath,
+                as_attachment=False,
+                download_name=f'{template.name}_preview.pdf',
+                mimetype='application/pdf'
+            )
+        else:
+            flash('Error generating template preview', 'error')
+            return redirect(url_for('admin.templates'))
+            
+    except Exception as e:
+        flash(f'Error generating preview: {str(e)}', 'error')
+        return redirect(url_for('admin.templates'))
+
 @admin_bp.route('/cvs')
 def cvs():
     """CV management page"""
