@@ -192,7 +192,59 @@ class TemplateGenerator:
             return False
     
     def _create_header(self, cv_data):
-        """Create technical header"""
+        """Create technical header with photo support"""
+        elements = []
+        
+        # Check if profile photo exists
+        profile_photo_path = cv_data.get('profile_photo')
+        if profile_photo_path and os.path.exists(profile_photo_path):
+            try:
+                # Create table for header layout with photo
+                from reportlab.platypus import Image
+                img = Image(profile_photo_path, width=50*mm, height=50*mm)
+                
+                # Create info content
+                info_content = []
+                name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
+                info_content.append(name)
+                
+                # Contact info in code style
+                contact_lines = []
+                if cv_data.get('email'):
+                    contact_lines.append(f"email: {cv_data['email']}")
+                if cv_data.get('phone'):
+                    contact_lines.append(f"phone: {cv_data['phone']}")
+                if cv_data.get('address'):
+                    contact_lines.append(f"location: {cv_data['address']}")
+                
+                for line in contact_lines:
+                    contact = Paragraph(line, self.styles['ContactInfo'])
+                    info_content.append(contact)
+                
+                # Create table with photo and info
+                header_data = [[img, info_content]]
+                header_table = Table(header_data, colWidths=[60*mm, 130*mm])
+                header_table.setStyle(TableStyle([
+                    ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+                ]))
+                elements.append(header_table)
+                
+            except Exception as e:
+                logging.error(f"Error adding photo to header: {str(e)}")
+                # Fallback to text-only header
+                elements.extend(self._create_text_header(cv_data))
+        else:
+            # No photo - use text-only header
+            elements.extend(self._create_text_header(cv_data))
+        
+        return elements
+    
+    def _create_text_header(self, cv_data):
+        """Create text-only header"""
         elements = []
         
         # Name with tech border

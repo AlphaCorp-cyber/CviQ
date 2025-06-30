@@ -289,9 +289,24 @@ Type '1' and send photo, or '2' to skip."""
         elif media_url:
             # Photo uploaded
             try:
-                # Here you would normally download and save the photo
-                # For now, we'll just store the URL
-                cv_data['profile_photo'] = media_url
+                # Download and save the photo
+                import requests
+                import os
+                from datetime import datetime
+                
+                # Create safe filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"profile_{user.id}_{timestamp}.jpg"
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                
+                # Download image
+                response = requests.get(media_url)
+                if response.status_code == 200:
+                    with open(filepath, 'wb') as f:
+                        f.write(response.content)
+                    cv_data['profile_photo'] = filepath
+                else:
+                    cv_data['profile_photo'] = None
                 
                 conv_state.state = 'select_template'
                 conv_state.data = json.dumps(cv_data)
