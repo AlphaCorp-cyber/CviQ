@@ -157,7 +157,60 @@ class TemplateGenerator:
             return False
     
     def _create_header(self, cv_data):
-        """Create medical header"""
+        """Create medical header with photo support"""
+        import os
+        elements = []
+        
+        # Check if profile photo exists
+        profile_photo_path = cv_data.get('profile_photo')
+        if profile_photo_path and os.path.exists(profile_photo_path):
+            try:
+                from reportlab.platypus import Image, Table, TableStyle
+                img = Image(profile_photo_path, width=55*mm, height=55*mm)
+                
+                # Create info content
+                info_content = []
+                name = Paragraph(cv_data.get('full_name', ''), self.styles['HeaderName'])
+                info_content.append(name)
+                credentials = Paragraph("M.D. | Healthcare Professional", self.styles['Credentials'])
+                info_content.append(credentials)
+                
+                # Contact info
+                contact_parts = []
+                if cv_data.get('phone'):
+                    contact_parts.append(f"☎ {cv_data['phone']}")
+                if cv_data.get('email'):
+                    contact_parts.append(f"✉ {cv_data['email']}")
+                if cv_data.get('address'):
+                    contact_parts.append(f"⚕ {cv_data['address']}")
+                
+                if contact_parts:
+                    contact_text = " | ".join(contact_parts)
+                    contact = Paragraph(contact_text, self.styles['ContactInfo'])
+                    info_content.append(contact)
+                
+                # Create table with photo and info
+                header_data = [[img, info_content]]
+                header_table = Table(header_data, colWidths=[65*mm, 125*mm])
+                header_table.setStyle(TableStyle([
+                    ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+                ]))
+                elements.append(header_table)
+                
+            except Exception as e:
+                logging.error(f"Error adding photo to healthcare header: {str(e)}")
+                elements.extend(self._create_text_header(cv_data))
+        else:
+            elements.extend(self._create_text_header(cv_data))
+        
+        return elements
+    
+    def _create_text_header(self, cv_data):
+        """Create text-only header"""
         elements = []
         
         # Name
