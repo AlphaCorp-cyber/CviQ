@@ -145,10 +145,50 @@ def settings():
 def twilio_settings():
     """Twilio configuration page"""
     if request.method == 'POST':
-        # In a real app, you'd save these to a secure config store
-        # For now, we'll just show a success message
-        flash('Twilio settings would be saved in production. For now, please add them as environment variables.', 'info')
-        return redirect(url_for('admin.settings'))
+        account_sid = request.form.get('account_sid', '').strip()
+        auth_token = request.form.get('auth_token', '').strip()
+        phone_number = request.form.get('phone_number', '').strip()
+        
+        # Validate required fields
+        if not account_sid or not auth_token or not phone_number:
+            flash('All fields are required!', 'error')
+            return render_template('admin/twilio_settings.html')
+        
+        # Validate account SID format
+        if not account_sid.startswith('AC') or len(account_sid) != 34:
+            flash('Invalid Account SID format. Should start with "AC" and be 34 characters long.', 'error')
+            return render_template('admin/twilio_settings.html')
+        
+        # Validate phone number format
+        if not phone_number.startswith('whatsapp:+'):
+            flash('Phone number should start with "whatsapp:+" (e.g., whatsapp:+1234567890)', 'error')
+            return render_template('admin/twilio_settings.html')
+        
+        # In Replit, we can write to a .env file that gets loaded
+        import os
+        
+        # Create/update .env file
+        env_content = f"""TWILIO_ACCOUNT_SID={account_sid}
+TWILIO_AUTH_TOKEN={auth_token}
+TWILIO_PHONE_NUMBER={phone_number}
+DATABASE_URL={os.environ.get('DATABASE_URL', 'sqlite:///whatsapp_cv.db')}
+SESSION_SECRET={os.environ.get('SESSION_SECRET', 'dev-secret-key')}
+"""
+        
+        try:
+            with open('.env', 'w') as f:
+                f.write(env_content)
+            
+            # Update current environment
+            os.environ['TWILIO_ACCOUNT_SID'] = account_sid
+            os.environ['TWILIO_AUTH_TOKEN'] = auth_token
+            os.environ['TWILIO_PHONE_NUMBER'] = phone_number
+            
+            flash('Twilio configuration saved successfully! Please restart the application for changes to take effect.', 'success')
+        except Exception as e:
+            flash(f'Error saving configuration: {str(e)}', 'error')
+        
+        return redirect(url_for('admin.twilio_settings'))
     
     return render_template('admin/twilio_settings.html')
 

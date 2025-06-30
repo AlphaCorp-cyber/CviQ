@@ -38,7 +38,7 @@
                         </label>
                         <input type="text" class="form-control" id="account_sid" name="account_sid" 
                                placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                               value="{{ config.TWILIO_ACCOUNT_SID or '' }}" readonly>
+                               value="{{ config.TWILIO_ACCOUNT_SID or '' }}" required>
                         <div class="form-text">
                             Your unique Twilio account identifier. Found in your Twilio Console dashboard.
                         </div>
@@ -50,8 +50,8 @@
                             Twilio Auth Token
                         </label>
                         <input type="password" class="form-control" id="auth_token" name="auth_token" 
-                               placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                               value="{{ '••••••••••••••••' if config.TWILIO_AUTH_TOKEN else '' }}" readonly>
+                               placeholder="Enter your auth token"
+                               value="" required>
                         <div class="form-text">
                             Your secret authentication token. Keep this secure and never share it publicly.
                         </div>
@@ -64,24 +64,19 @@
                         </label>
                         <input type="text" class="form-control" id="phone_number" name="phone_number" 
                                placeholder="whatsapp:+1234567890"
-                               value="{{ config.TWILIO_PHONE_NUMBER or '' }}" readonly>
+                               value="{{ config.TWILIO_PHONE_NUMBER or '' }}" required>
                         <div class="form-text">
                             Your Twilio WhatsApp-enabled phone number (includes "whatsapp:" prefix).
                         </div>
                     </div>
 
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Note:</strong> This form is read-only. To update these settings, add them as environment variables:
-                        <ul class="mb-0 mt-2">
-                            <li><code>TWILIO_ACCOUNT_SID</code></li>
-                            <li><code>TWILIO_AUTH_TOKEN</code></li>
-                            <li><code>TWILIO_PHONE_NUMBER</code></li>
-                        </ul>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> These settings will be saved as environment variables and take effect immediately.
                     </div>
 
-                    <button type="button" class="btn btn-secondary" disabled>
-                        <i class="fas fa-save me-1"></i>Save Settings
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Save Configuration
                     </button>
                 </form>
             </div>
