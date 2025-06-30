@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
     // Template Usage Chart
-    const templateData = {{ template_stats | tojsonfilter | safe }};
+    const templateData = {{ template_stats | tojson | safe }};
     if (templateData.length > 0) {
         const ctx2 = document.getElementById('templateChart').getContext('2d');
         
