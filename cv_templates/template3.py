@@ -269,39 +269,14 @@ class TemplateGenerator:
             job_title = first_line
             company = ""
         
-        # Create job title and company in a table for better alignment
-        job_data = []
+        # Job title
+        job_title_para = Paragraph(job_title, self.styles['JobTitle'])
+        elements.append(job_title_para)
+        
+        # Company
         if company:
-            job_content = f"""
-            <para fontSize="12" fontName="Helvetica-Bold" textColor="#1A237E">
-            {job_title}
-            </para>
-            <para fontSize="11" textColor="#3949AB" spaceAfter="2">
-            {company}
-            </para>
-            """
-        else:
-            job_content = f"""
-            <para fontSize="12" fontName="Helvetica-Bold" textColor="#1A237E">
-            {job_title}
-            </para>
-            """
-        
-        job_data.append([Paragraph(job_content, self.styles['Normal'])])
-        
-        job_table = Table(job_data, colWidths=[16*cm])
-        job_table.setStyle(TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 15),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
-            ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#FAFAFA')),
-            ('LINEABOVE', (0, 0), (-1, -1), 1, colors.HexColor('#E8EAF6')),
-        ]))
-        
-        elements.append(job_table)
+            company_para = Paragraph(company, self.styles['Organization'])
+            elements.append(company_para)
         
         # Find duration and description
         duration = ""
@@ -364,35 +339,14 @@ class TemplateGenerator:
             degree = first_line
             institution = ""
         
-        # Create education table for consistent formatting
-        edu_data = []
+        # Degree
+        degree_para = Paragraph(degree, self.styles['JobTitle'])
+        elements.append(degree_para)
+        
+        # Institution
         if institution:
-            edu_content = f"""
-            <para fontSize="11" fontName="Helvetica-Bold" textColor="#1A237E">
-            {degree}
-            </para>
-            <para fontSize="10" textColor="#3949AB">
-            {institution}
-            </para>
-            """
-        else:
-            edu_content = f"""
-            <para fontSize="11" fontName="Helvetica-Bold" textColor="#1A237E">
-            {degree}
-            </para>
-            """
-        
-        edu_data.append([Paragraph(edu_content, self.styles['Normal'])])
-        
-        edu_table = Table(edu_data, colWidths=[16*cm])
-        edu_table.setStyle(TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
-        ]))
-        
-        elements.append(edu_table)
+            institution_para = Paragraph(institution, self.styles['Organization'])
+            elements.append(institution_para)
         
         return elements
     
@@ -416,12 +370,8 @@ class TemplateGenerator:
                 skill_cells = []
                 
                 for skill in row_skills:
-                    skill_content = f"""
-                    <para fontSize="10" fontName="Helvetica-Bold" textColor="#1A237E">
-                    • {skill}
-                    </para>
-                    """
-                    skill_cells.append(Paragraph(skill_content, self.styles['Normal']))
+                    skill_para = Paragraph(f"• {skill}", self.styles['SkillsHighlight'])
+                    skill_cells.append(skill_para)
                 
                 # Fill empty cells if needed
                 while len(skill_cells) < skills_per_row:
